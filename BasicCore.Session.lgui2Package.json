@@ -1,0 +1,13 @@
+{
+    "$schema": "http://www.lavishsoft.com/schema/lgui2Package.json",
+    "templates":{
+
+    },
+    "elements":[
+        {
+            "type":"panel",
+            "visibility": "hidden",
+            "name":"basicCore.events"
+        }
+    ]
+}

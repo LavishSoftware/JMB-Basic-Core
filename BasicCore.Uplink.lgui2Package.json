@@ -1,0 +1,372 @@
+{
+    "$schema": "http://www.lavishsoft.com/schema/lgui2Package.json",
+    "templates":{
+        "basicCore.defaultSettings":{
+            "launcher":{
+            },
+            "highlighter":{
+                "enable":true
+            },
+            "hotkeys":{
+                "slotHotkeys":[
+                    "Ctrl+Alt+1",
+                    "Ctrl+Alt+2",
+                    "Ctrl+Alt+3",
+                    "Ctrl+Alt+4",
+                    "Ctrl+Alt+5",
+                    "Ctrl+Alt+6",
+                    "Ctrl+Alt+7",
+                    "Ctrl+Alt+8",
+                    "Ctrl+Alt+9",
+                    "Ctrl+Alt+0",
+                    "Ctrl+Alt+-",
+                    "Ctrl+Alt+="
+                ],
+                "previousWindowHotkey":"Ctrl+Alt+Z",
+                "nextWindowHotkey":"Ctrl+Alt+X"
+            },
+            "performance":{
+                "lockAffinity":true,
+                "background":{
+                    "maxFPS":30,
+                    "calculate":true
+                },
+                "foreground":{
+                    "maxFPS":60,
+                    "calculate":true
+                }
+            },
+            "windowLayout":{
+                "useLayout":"Default",
+                "layouts":[
+                    {
+                        "name":"Default",
+                        "style": "horizontal"
+                    }
+                ]
+            }
+        },
+        "basicCore.launchProfileView":{
+            "jsonTemplate":"listboxitem",
+            "padding":2,
+            "content":{
+              "type":"textblock",
+              "textBinding":{
+                "pullFormat":"${_CONTEXTITEMDATA_.Get[name]}",
+                "pullReplaceNull":""
+              }
+            }
+        }
+    },
+    "elements":[
+        {
+            "type":"panel",
+            "visibility": "hidden",
+            "name":"basicCore.events"
+        },
+        {
+            "type":"window",
+            "name":"basicCore.mainWindow",
+            "title":"Joe Multiboxer: Basic Core",
+            "hideOnClose": true,
+            "horizontalAlignment": "center",
+            "verticalAlignment": "center",
+            "width":500,
+            "height":300,
+            "content":{
+                "type":"dockpanel",
+                "horizontalAlignment": "stretch",
+                "verticalAlignment": "stretch",                
+                "children":[
+                    {
+                        "_dock":"bottom",
+                        "horizontalAlignment": "stretch",
+                        "type":"dockpanel",
+                        "children":[
+                            {
+                                "type":"button",
+                                "_dock":"right",
+                                "content":"Reload Agent",
+                                "eventHandlers": {
+                                    "onPress":{
+                                        "type":"code",
+                                        "code":"JMB.Agent[Basic Core]:Stop:Reload:Start"
+                                    }
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "_dock":"top",
+                        "type":"tabcontrol",
+                        "verticalAlignment": "stretch",
+                        "horizontalAlignment": "stretch",
+                        "tabs":[
+                            {
+                                "type":"tab",
+                                "header":"Launcher",
+                                "content":{
+                                    "type":"dockpanel",
+                                    "horizontalAlignment": "stretch",
+                                    "verticalAlignment": "stretch",
+                                    "children":[
+                                        {
+                                            "_dock":"left",
+                                            "type":"dragger",
+                                            "width":200,
+                                            "allowMove":false,
+                                            "allowResize":true,
+                                            "borderThickness":[0,0,5,0],
+                                            "borderBrush":{"color":[0.5,0.5,0.5]},
+                                            "content":{
+                                                "type":"listbox",
+                                                "_dock":"left",
+                                                "verticalAlignment":"stretch",
+                                                "horizontalAlignment":"stretch",
+                                                "itemsBinding":{
+                                                    "pullFormat":"${BasicCore.Settings.Launcher.Get[profiles]}",
+                                                    "pullHook": {   
+                                                        "elementName": "basicCore.events",
+                                                        "flags": "global",
+                                                        "event": "onLauncherProfilesUpdated"
+                                                    }
+                                                },
+                                                "itemViewGenerators":{
+                                                    "default":{
+                                                        "type":"template",
+                                                        "template":"basicCore.launchProfileView"
+                                                    }
+                                                },
+                                                "selectedItemBinding":{
+                                                    "pullFormat":"${BasicCore.SelectedLauncherProfile.Get[name]}",
+                                                    "pushFormat":["BasicCore:SetSelectedLauncherProfile[\"","\"]"]
+                                                },
+                                                "selectedItemBindingProperty":"name"
+                                            }
+                                        },
+                                        {
+                                            "_dock":"left",
+                                            "type":"dockpanel",
+                                            "verticalAlignment":"stretch",
+                                            "horizontalAlignment":"stretch",
+                                            "children":[
+                                                {
+                                                    "_dock":"bottom",
+                                                    "type":"button",
+                                                    "content":"Launch!",
+                                                    "horizontalAlignment":"right"
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            },
+                            {
+                                "type":"tab",
+                                "header":"Launch Profiles",
+                                "content":{
+                                    "type":"dockpanel",
+                                    "horizontalAlignment": "stretch",
+                                    "verticalAlignment": "stretch",
+                                    "children":[
+                                        {
+                                            "type":"dockpanel",
+                                            "_dock":"top",
+                                            "children":[
+                                                {
+                                                    "type":"button",
+                                                    "_dock":"right",
+                                                    "content":"Delete",
+                                                    "eventHandlers":{
+                                                        "onPress":{
+                                                            "type":"method",
+                                                            "object":"BasicCore",
+                                                            "method":"OnDeleteLaunchProfileButton"
+                                                        }
+                                                    }
+                                                },
+                                                {
+                                                    "type":"button",
+                                                    "_dock":"right",
+                                                    "content":"Copy",
+                                                    "eventHandlers":{
+                                                        "onPress":{
+                                                            "type":"method",
+                                                            "object":"BasicCore",
+                                                            "method":"OnCopyLaunchProfileButton"
+                                                        }
+                                                    }
+                                                },
+                                                {
+                                                    "type":"combobox",
+                                                    "_dock":"left",
+                                                    "horizontalAlignment": "stretch",
+                                                    "itemsBinding":{
+                                                        "pullFormat":"${BasicCore.Settings.Launcher.Get[profiles]}",
+                                                        "pullHook": {   
+                                                            "elementName": "basicCore.events",
+                                                            "flags": "global",
+                                                            "event": "onLauncherProfilesUpdated"
+                                                        }
+                                                    },
+                                                    "itemViewGenerators":{
+                                                        "default":{
+                                                            "type":"template",
+                                                            "template":"basicCore.launchProfileView"
+                                                        }
+                                                    },
+                                                    "selectedItemBinding":{
+                                                        "pullFormat":"${BasicCore.SelectedLauncherProfile.Get[name]}",
+                                                        "pushFormat":["BasicCore:SetSelectedLauncherProfile[\"","\"]"]
+                                                    },
+                                                    "selectedItemBindingProperty":"name"
+                                                }
+                                            ]
+                                        },                                        
+                                        {
+                                            "type":"objectview",
+                                            "_dock":"top",
+                                            "objectBinding": {
+                                                "pullFormat":"${BasicCore.SelectedLauncherProfile}"
+                                            },
+                                            "properties":[
+                                                {
+                                                    "name":"Profile Name",
+                                                    "dataBinding":{
+                                                      "pullFormat":"${_CONTEXT_.Object.Get[name]}",
+                                                      "pullReplaceNull":"",
+                                                      "pushFormat":["_CONTEXT_.Object:SetString[name,\"","\"]"]
+                                                    },
+                                                    "editTemplate":"propertyview.textbox"                            
+                                                },
+                                                {
+                                                    "name":"Game",
+                                                    "dataBinding":{
+                                                      "pullFormat":"${_CONTEXT_.Object.Get[game]}",
+                                                      "pullReplaceNull":"",
+                                                      "pushFormat":["_CONTEXT_.Object:SetString[game,\"","\"]"]
+                                                    },
+                                                    "editTemplate":"propertyview.textbox"                            
+                                                },
+                                                {
+                                                    "name":"Path",
+                                                    "dataBinding":{
+                                                      "pullFormat":"${_CONTEXT_.Object.Get[path]}",
+                                                      "pullReplaceNull":"",
+                                                      "pushFormat":["_CONTEXT_.Object:SetString[path,\"","\"]"]
+                                                    },
+                                                    "editTemplate":"propertyview.textbox"                            
+                                                },
+                                                {
+                                                    "name":"Executable",
+                                                    "dataBinding":{
+                                                      "pullFormat":"${_CONTEXT_.Object.Get[executable]}",
+                                                      "pullReplaceNull":"",
+                                                      "pushFormat":["_CONTEXT_.Object:SetString[executable,\"","\"]"]
+                                                    },
+                                                    "editTemplate":"propertyview.textbox"                            
+                                                },
+                                                {
+                                                    "name":"Parameters",
+                                                    "dataBinding":{
+                                                      "pullFormat":"${_CONTEXT_.Object.Get[parameters]}",
+                                                      "pullReplaceNull":"",
+                                                      "pushFormat":["_CONTEXT_.Object:SetString[parameters,\"","\"]"]
+                                                    },
+                                                    "editTemplate":"propertyview.textbox"                            
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            },
+                            {
+                                "type":"tab",
+                                "header":"General",
+                                "content":{
+                                    "type":"dockpanel",
+                                    "horizontalAlignment":"stretch",
+                                    "verticalAlignment":"stretch",
+                                    "children":[
+                                        {
+                                            "type":"objectview",
+                                            "_dock":"top",
+                                            "objectBinding": {
+                                                "pullFormat":"${BasicCore.Settings}",
+                                                "pullOnce":true
+                                            },
+                                            "properties":[
+                                                {
+                                                    "name":"Highlighter",
+                                                    "dataBinding":{
+                                                      "pullFormat":"${_CONTEXT_.Object.Highlighter.Get[enable]}",
+                                                      "pullReplaceNull":"",
+                                                      "pushFormat":["_CONTEXT_.Object.Highlighter:SetBool[enable,\"","\"]"]
+                                                    },
+                                                    "editTemplate":"propertyview.checkbox"                            
+                                                },
+                                                {
+                                                    "name":"Lock CPU Affinity",
+                                                    "dataBinding":{
+                                                        "pullFormat":"${_CONTEXT_.Object.Performance.Get[lockAffinity]}",
+                                                        "pullReplaceNull":"",
+                                                        "pushFormat":["_CONTEXT_.Object.Performance:SetBool[lockAffinity,\"","\"]"]
+                                                    },
+                                                    "editTemplate":"propertyview.checkbox"                            
+                                                },
+                                                {
+                                                    "name":"Foreground FPS",
+                                                    "dataBinding":{
+                                                        "pullFormat":"${_CONTEXT_.Object.Performance.Get[foreground,maxFPS]}",
+                                                        "pullReplaceNull":"",
+                                                        "pushFormat":["_CONTEXT_.Object.Performance.Get[foreground]:SetInteger[maxFPS,\"","\"]"]
+                                                    },
+                                                    "editTemplate":"propertyview.textbox"
+                                                },
+                                                {
+                                                    "name":"   ⮩ Minimum",
+                                                    "dataBinding":{
+                                                        "pullFormat":"${_CONTEXT_.Object.Performance.Get[foreground,calculate]}",
+                                                        "pullReplaceNull":"",
+                                                        "pushFormat":["_CONTEXT_.Object.Performance.Get[foreground]:SetBool[calculate,\"","\"]"]
+                                                    },
+                                                    "editTemplate":"propertyview.checkbox"
+                                                },
+                                                {
+                                                    "name":"Background FPS",
+                                                    "dataBinding":{
+                                                        "pullFormat":"${_CONTEXT_.Object.Performance.Get[background,maxFPS]}",
+                                                        "pullReplaceNull":"0",
+                                                        "pushFormat":["_CONTEXT_.Object.Performance.Get[background]:SetInteger[maxFPS,\"","\"]"]
+                                                    },
+                                                    "editTemplate":"propertyview.textbox"
+                                                },
+                                                {
+                                                    "name":"   ⮩ Minimum",
+                                                    "dataBinding":{
+                                                        "pullFormat":"${_CONTEXT_.Object.Performance.Get[background,calculate]}",
+                                                        "pullReplaceNull":"",
+                                                        "pushFormat":["_CONTEXT_.Object.Performance.Get[background]:SetBool[calculate,\"","\"]"]
+                                                    },
+                                                    "editTemplate":"propertyview.checkbox"
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            },
+                            {
+                                "type":"tab",
+                                "header":"Hotkeys"
+                            },
+                            {
+                                "type":"tab",
+                                "header":"Window Layout"
+                            }
+                        ]                        
+                    }
+                ]
+            }
+        }
+    ]
+}
