@@ -22,8 +22,9 @@
                     "Ctrl+Alt+-",
                     "Ctrl+Alt+="
                 ],
-                "previousWindowHotkey":"Ctrl+Alt+Z",
-                "nextWindowHotkey":"Ctrl+Alt+X"
+                "previousWindow":"Ctrl+Alt+Z",
+                "nextWindow":"Ctrl+Alt+X",
+                "globalSwitchingHotkeys":true
             },
             "performance":{
                 "lockAffinity":true,
@@ -46,6 +47,10 @@
                 ]
             }
         },
+        "propertyview.listbox":{
+            "type":"listbox",
+            "jsonTemplate":"listbox"
+        },
         "basicCore.launchProfileView":{
             "jsonTemplate":"listboxitem",
             "padding":2,
@@ -55,6 +60,30 @@
                 "pullFormat":"${_CONTEXTITEMDATA_.Get[name]}",
                 "pullReplaceNull":""
               }
+            }
+        },
+        "basicCore.slotHotkeyView":{
+            "jsonTemplate":"listboxitem",
+            "padding":2,
+            "content":{
+                "type":"stackpanel",
+                "orientation":"horizontal",
+                "children":[
+                    {
+                        "type":"textblock",
+                        "textBinding":{
+                        "pullFormat":"${_CONTEXTITEM_.Index}: ",
+                        "pullReplaceNull":""
+                        }
+                    },
+                    {
+                        "type":"textblock",
+                        "textBinding":{
+                        "pullFormat":"${_CONTEXTITEMDATA_}",
+                        "pullReplaceNull":""
+                        }
+                    }
+                ]
             }
         }
     },
@@ -357,7 +386,66 @@
                             },
                             {
                                 "type":"tab",
-                                "header":"Hotkeys"
+                                "header":"Hotkeys",
+                                "content":{
+                                    "type":"dockpanel",
+                                    "horizontalAlignment":"stretch",
+                                    "verticalAlignment":"stretch",
+                                    "children":[
+                                        {
+                                            "type":"objectview",
+                                            "_dock":"top",
+                                            "objectBinding": {
+                                                "pullFormat":"${BasicCore.Settings}",
+                                                "pullOnce":true
+                                            },
+                                            "properties":[
+                                                {
+                                                    "name":"Switching Hotkeys are Windows Hotkeys",
+                                                    "dataBinding":{
+                                                      "pullFormat":"${_CONTEXT_.Object.Hotkeys.Get[globalSwitchingHotkeys]}",
+                                                      "pullReplaceNull":"",
+                                                      "pushFormat":["_CONTEXT_.Object.Hotkeys:SetBool[globalSwitchingHotkeys,\"","\"]"]
+                                                    },
+                                                    "editTemplate":"propertyview.checkbox"                            
+                                                },
+                                                {
+                                                    "name":"Previous Window",
+                                                    "dataBinding":{
+                                                        "pullFormat":"${_CONTEXT_.Object.Hotkeys.Get[previousWindow]}",
+                                                        "pullReplaceNull":"",
+                                                        "pushFormat":["_CONTEXT_.Object.Hotkeys:SetString[previousWindow,\"","\"]"]
+                                                      },
+                                                      "editTemplate":"propertyview.inputCombo"
+                                                },
+                                                {
+                                                    "name":"Next Window",
+                                                    "dataBinding":{
+                                                        "pullFormat":"${_CONTEXT_.Object.Hotkeys.Get[nextWindow]}",
+                                                        "pullReplaceNull":"",
+                                                        "pushFormat":["_CONTEXT_.Object.Hotkeys:SetString[nextWindow,\"","\"]"]
+                                                      },
+                                                      "editTemplate":"propertyview.inputCombo"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "type":"listbox",
+                                            "_dock":"top",
+                                            "horizontalAlignment":"stretch",
+                                            "verticalAlignment":"stretch",
+                                            "itemsBinding":{
+                                                "pullFormat":"${BasicCore.Settings.Hotkeys.Get[slotHotkeys]}"
+                                            },
+                                            "itemViewGenerators":{
+                                                "default":{
+                                                    "type":"template",
+                                                    "template":"basicCore.slotHotkeyView"
+                                                }
+                                            }
+                                        }
+                                    ]
+                                }
                             },
                             {
                                 "type":"tab",
