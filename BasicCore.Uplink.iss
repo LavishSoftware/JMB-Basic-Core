@@ -6,6 +6,8 @@ objectdef basicCore
 
     variable weakref SelectedLauncherProfile
 
+    variable weakref EditingWindowLayout
+
     method Initialize()
     {
         LGUI2:LoadPackageFile[BasicCore.Uplink.lgui2Package.json]
@@ -31,6 +33,22 @@ objectdef basicCore
         LGUI2:UnloadPackageFile[BasicCore.Uplink.lgui2Package.json]
     }
 
+    method SetEditingWindowLayout(string name)
+    {
+        echo SetEditingWindowLayout ${name~}
+        variable uint id
+        id:Set[${Settings.FindWindowLayout["${name~}"]}]
+        if !${id}
+        {
+            EditingWindowLayout:SetReference[NULL]
+            return
+        }
+
+        EditingWindowLayout:SetReference["Settings.WindowLayout.Get[layouts,${id}]"]
+
+        LGUI2.Element[basicCore.events]:FireEventHandler[onEditingWindowLayoutUpdated]
+    }
+
     method SetSelectedLauncherProfile(string name)
     {
         echo SetSelectedLauncherProfile ${name~}
@@ -44,7 +62,7 @@ objectdef basicCore
 
         SelectedLauncherProfile:SetReference["Settings.Launcher.Get[profiles,${id}]"]
 
-        LGUI2.Element[BasicLauncher.events]:FireEventHandler[onSelectedLauncherProfileUpdated]
+        LGUI2.Element[basicCore.events]:FireEventHandler[onSelectedLauncherProfileUpdated]
     }
 
     method ImportGameProfiles()
@@ -75,7 +93,7 @@ objectdef basicCore
         }
     
         Games:SetValue["${jo.AsJSON~}"]
-        LGUI2.Element[BasicLauncher.events]:FireEventHandler[onGamesUpdated]
+        LGUI2.Element[basicCore.events]:FireEventHandler[onGamesUpdated]
     }
 
     method OnCopyLaunchProfileButton()

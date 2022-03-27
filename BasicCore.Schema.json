@@ -51,9 +51,6 @@
                         "title":"Monitor Number (1-based)"
                     }
                 },
-                "useLayout":{
-                    "type":"array"
-                },
                 "style":{
                     "type":"string",
                     "enum": ["horizontal","veritcal","custom"]

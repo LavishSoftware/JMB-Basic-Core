@@ -53,6 +53,11 @@ objectdef basicCore_settings
         return 0
     }
 
+    member:uint FindWindowLayout(string name)
+    {
+        return ${This.FindInArray["WindowLayout.Get[layouts]","name","${name~}"]}
+    }
+
     member:uint FindLauncherProfile(string name)
     {
         return ${This.FindInArray["Launcher.Get[profiles]","name","${name~}"]}

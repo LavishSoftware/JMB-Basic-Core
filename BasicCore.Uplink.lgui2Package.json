@@ -51,6 +51,17 @@
             "type":"listbox",
             "jsonTemplate":"listbox"
         },
+        "basicCore.windowLayoutView":{
+            "jsonTemplate":"listboxitem",
+            "padding":2,
+            "content":{
+              "type":"textblock",
+              "textBinding":{
+                "pullFormat":"${_CONTEXTITEMDATA_.Get[name]}",
+                "pullReplaceNull":""
+              }
+            }
+        },
         "basicCore.launchProfileView":{
             "jsonTemplate":"listboxitem",
             "padding":2,
@@ -72,7 +83,7 @@
                     {
                         "type":"textblock",
                         "textBinding":{
-                        "pullFormat":"${_CONTEXTITEM_.Index}: ",
+                        "pullFormat":"Slot ${_CONTEXTITEM_.Index}: ",
                         "pullReplaceNull":""
                         }
                     },
@@ -326,6 +337,27 @@
                                             },
                                             "properties":[
                                                 {
+                                                    "name":"Window Layout",                                                    
+                                                    "editTemplate":"propertyview.combobox",
+                                                    "controlData":{
+                                                        "selectedItemBinding":{
+                                                            "pullFormat":"${BasicCore.Settings.WindowLayout.Get[useLayout]}",
+                                                            "pullReplaceNull":"",
+                                                            "pushFormat":["BasicCore.Settings.WindowLayout:SetString[useLayout,\"","\"]"]
+                                                        },
+                                                        "selectedItemBindingProperty":"name",
+                                                        "itemsBinding":{
+                                                            "pullFormat":"${BasicCore.Settings.WindowLayout.Get[layouts]}"
+                                                        },
+                                                        "itemViewGenerators":{
+                                                            "default":{
+                                                                "type":"template",
+                                                                "template":"basicCore.windowLayoutView"
+                                                            }
+                                                        }
+                                                    }
+                                                },
+                                                {
                                                     "name":"Highlighter",
                                                     "dataBinding":{
                                                       "pullFormat":"${_CONTEXT_.Object.Highlighter.Get[enable]}",
@@ -430,6 +462,26 @@
                                             ]
                                         },
                                         {
+                                            "type":"textblock",
+                                            "_dock":"top",
+                                            "text":"Slot Activation Hotkeys"
+                                        },
+                                        {
+                                            "type":"dockpanel",
+                                            "_dock":"bottom",
+                                            "horizontalAlignment":"stretch",
+                                            "children":[
+                                                {
+                                                    "type":"button",
+                                                    "content":"Add"
+                                                },
+                                                {
+                                                    "type":"button",
+                                                    "content":"Remove"
+                                                }
+                                            ]
+                                        },
+                                        {
                                             "type":"listbox",
                                             "_dock":"top",
                                             "horizontalAlignment":"stretch",
@@ -449,7 +501,143 @@
                             },
                             {
                                 "type":"tab",
-                                "header":"Window Layout"
+                                "header":"Window Layouts",
+                                "content":{
+                                    "type":"dockpanel",
+                                    "horizontalAlignment":"stretch",
+                                    "verticalAlignment":"stretch",
+                                    "children":[
+                                        {
+                                            "type":"dockpanel",
+                                            "_dock":"top",
+                                            "children":[
+                                                {
+                                                    "type":"button",
+                                                    "_dock":"right",
+                                                    "content":"Delete",
+                                                    "eventHandlers":{
+                                                        "onPress":{
+                                                            "type":"method",
+                                                            "object":"BasicCore",
+                                                            "method":"OnDeleteWindowLayoutButton"
+                                                        }
+                                                    }
+                                                },
+                                                {
+                                                    "type":"button",
+                                                    "_dock":"right",
+                                                    "content":"Copy",
+                                                    "eventHandlers":{
+                                                        "onPress":{
+                                                            "type":"method",
+                                                            "object":"BasicCore",
+                                                            "method":"OnCopyWindowLayoutButton"
+                                                        }
+                                                    }
+                                                },
+                                                {
+                                                    "type":"combobox",
+                                                    "_dock":"left",
+                                                    "horizontalAlignment": "stretch",
+                                                    "itemsBinding":{
+                                                        "pullFormat":"${BasicCore.Settings.WindowLayout.Get[layouts]}",
+                                                        "pullHook": {   
+                                                            "elementName": "basicCore.events",
+                                                            "flags": "global",
+                                                            "event": "onWindowLayoutsUpdated"
+                                                        }
+                                                    },
+                                                    "itemViewGenerators":{
+                                                        "default":{
+                                                            "type":"template",
+                                                            "template":"basicCore.windowLayoutView"
+                                                        }
+                                                    },
+                                                    "selectedItemBinding":{
+                                                        "pullFormat":"${BasicCore.EditingWindowLayout.Get[name]}",
+                                                        "pushFormat":["BasicCore:SetEditingWindowLayout[\"","\"]"]
+                                                    },
+                                                    "selectedItemBindingProperty":"name"
+                                                }
+                                            ]
+                                        },                                        
+                                        {
+                                            "type":"objectview",
+                                            "_dock":"top",
+                                            "objectBinding": {
+                                                "pullFormat":"${BasicCore.EditingWindowLayout}"
+                                            },
+                                            "properties":[
+                                                {
+                                                    "name":"Layout Name",
+                                                    "dataBinding":{
+                                                      "pullFormat":"${_CONTEXT_.Object.Get[name]}",
+                                                      "pullReplaceNull":"",
+                                                      "pushFormat":["_CONTEXT_.Object:SetString[name,\"","\"]"]
+                                                    },
+                                                    "editTemplate":"propertyview.textbox"                            
+                                                },
+                                                {
+                                                    "name":"Style",
+                                                    "dataBinding":{
+                                                      "pullFormat":"${_CONTEXT_.Object.Get[style]}",
+                                                      "pullReplaceNull":"",
+                                                      "pushFormat":["_CONTEXT_.Object:SetString[style,\"","\"]"]
+                                                    },
+                                                    "editTemplate":"propertyview.textbox"                            
+                                                },
+                                                {
+                                                    "name":"Swap when Focused",
+                                                    "dataBinding":{
+                                                      "pullFormat":"${_CONTEXT_.Object.Get[swapOnActivate]}",
+                                                      "pushFormat":["_CONTEXT_.Object:SetBool[swapOnActivate,\"","\"]"]
+                                                    },
+                                                    "editTemplate":"propertyview.checkbox"                            
+                                                },
+                                                {
+                                                    "name":"Swap when Focused by JMB Hotkey",
+                                                    "dataBinding":{
+                                                      "pullFormat":"${_CONTEXT_.Object.Get[swapOnHotkeyFocused]}",
+                                                      "pushFormat":["_CONTEXT_.Object:SetBool[swapOnHotkeyFocused,\"","\"]"]
+                                                    },
+                                                    "editTemplate":"propertyview.checkbox"                            
+                                                },
+                                                {
+                                                    "name":"Leave Hole",
+                                                    "dataBinding":{
+                                                        "pullFormat":"${_CONTEXT_.Object.Get[leaveHole]}",
+                                                        "pushFormat":["_CONTEXT_.Object:SetBool[leaveHole,\"","\"]"]
+                                                      },
+                                                      "editTemplate":"propertyview.checkbox"                            
+                                                },
+                                                {
+                                                    "name":"Focus Follows Mouse",
+                                                    "dataBinding":{
+                                                        "pullFormat":"${_CONTEXT_.Object.Get[focusFollowsMouse]}",
+                                                        "pushFormat":["_CONTEXT_.Object:SetBool[focusFollowsMouse,\"","\"]"]
+                                                      },
+                                                      "editTemplate":"propertyview.checkbox"                            
+                                                },
+                                                {
+                                                    "name":"Avoid Taskbar",
+                                                    "dataBinding":{
+                                                        "pullFormat":"${_CONTEXT_.Object.Get[avoidTaskbar]}",
+                                                        "pushFormat":["_CONTEXT_.Object:SetBool[avoidTaskbar,\"","\"]"]
+                                                      },
+                                                      "editTemplate":"propertyview.checkbox"                            
+                                                },
+                                                {
+                                                    "name":"Rescale Windows",
+                                                    "dataBinding":{
+                                                        "pullFormat":"${_CONTEXT_.Object.Get[rescaleWindows]}",
+                                                        "pushFormat":["_CONTEXT_.Object:SetBool[rescaleWindows,\"","\"]"]
+                                                      },
+                                                      "editTemplate":"propertyview.checkbox"                            
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
                             }
                         ]                        
                     }
