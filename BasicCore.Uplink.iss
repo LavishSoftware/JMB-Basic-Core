@@ -3,6 +3,7 @@
 objectdef basicCore
 {
     variable basicCore_settings Settings
+    variable basicCore_launcher Launcher
 
     variable weakref SelectedLauncherProfile
 
@@ -124,6 +125,54 @@ objectdef basicCore
         Settings:EraseLauncherProfile[${SelectedLauncherProfile~}]
     }
 
+}
+
+objectdef basicCore_launcher
+{
+    method InstallCharacter(uint Slot, jsonvalueref launcherProfile)
+    {
+        if !${launcherProfile.Type.Equal[object]}
+            return FALSE
+
+        variable jsonvalue jo
+        jo:SetValue["${launcherProfile.AsJSON~}"]
+
+        if ${launcherProfile.Has[name]}
+            jo:SetString[display_name,"${launcherProfile.Get[name]~}"]
+
+        if ${launcherProfile.Has[game]}
+            jo:SetString[gameProfile,"${launcherProfile.Get[game]~} Default Profile"]
+
+        JMB:AddCharacter["${jo.AsJSON~}"]
+        return TRUE
+    }
+
+    method Launch(jsonvalueref launcherProfile, uint Slot=0)
+    {
+        if !${Slot}
+        {
+            Slot:Set["${JMB.Addslot.ID}"]
+        }
+        else
+        {
+            kill jmb${Slot}
+        }
+
+        This:InstallCharacter[${Slot},launcherProfile]
+        JMB.Slot[${Slot}]:SetCharacter[${Slot}]
+        JMB.Slot[${Slot}]:Launch
+    }
+
+    method Relaunch(uint numSlot)
+    {
+        if !${JMB.Slot[${numSlot}].ProcessID}
+            JMB.Slot[${numSlot}]:Launch
+    }
+    
+    method RelaunchMissingSlots()
+    {
+        JMB.Slots:ForEach["This:Relaunch[\${ForEach.Value.Get[id]}]"]
+    }
 }
 
 variable(global) basicCore BasicCore
