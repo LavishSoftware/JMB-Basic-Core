@@ -43,6 +43,9 @@
                     {
                         "name":"Default",
                         "style": "horizontal"
+                    },
+                    {
+                        "name":"Custom Layout"
                     }
                 ]
             }
@@ -95,6 +98,75 @@
                         }
                     }
                 ]
+            }
+        },
+        "basicCore.windowLayoutRegionEdit":{
+            "type":"stackpanel",
+            "orientation":"horizontal",
+            "children":[
+                {
+                    "type":"textblock",
+                    "text":"X: "
+                },
+                { 
+                    "type":"textbox",
+                    "minSize":[60,0],
+                    "textBinding":{
+                        "pullFormat":"${_CONTEXTITEMDATA_.Get[x]}",
+                        "pullReplaceNull":"",
+                        "pushFormat":["_CONTEXTITEMDATA_:SetInteger[x,","]"]
+                    },
+                    "textBindingUsesFocus":true
+                },
+                {
+                    "type":"textblock",
+                    "text":"Y: "
+                },
+                { 
+                    "type":"textbox",
+                    "minSize":[60,0],
+                    "textBinding":{
+                        "pullFormat":"${_CONTEXTITEMDATA_.Get[y]}",
+                        "pullReplaceNull":"",
+                        "pushFormat":["_CONTEXTITEMDATA_:SetInteger[y,","]"]
+                    },
+                    "textBindingUsesFocus":true
+                },
+                {
+                    "type":"textblock",
+                    "text":"W: "
+                },
+                { 
+                    "type":"textbox",
+                    "minSize":[60,0],
+                    "textBinding":{
+                        "pullFormat":"${_CONTEXTITEMDATA_.Get[width]}",
+                        "pullReplaceNull":"",
+                        "pushFormat":["_CONTEXTITEMDATA_:SetInteger[width,","]"]
+                    },
+                    "textBindingUsesFocus":true
+                },
+                {
+                    "type":"textblock",
+                    "text":"H: "
+                },
+                { 
+                    "type":"textbox",
+                    "minSize":[60,0],
+                    "textBinding":{
+                        "pullFormat":"${_CONTEXTITEMDATA_.Get[height]}",
+                        "pullReplaceNull":"",
+                        "pushFormat":["_CONTEXTITEMDATA_:SetInteger[height,","]"]
+                    },
+                    "textBindingUsesFocus":true
+                }
+            ]
+        },
+        "basicCore.windowLayoutRegionView":{
+            "jsonTemplate":"listboxitem",
+            "padding":2,
+            "content":{
+                "jsonTemplate":"basicCore.windowLayoutRegionEdit"
             }
         }
     },
@@ -560,7 +632,7 @@
                                                     "selectedItemBindingProperty":"name"
                                                 }
                                             ]
-                                        },                                        
+                                        },
                                         {
                                             "type":"objectview",
                                             "_dock":"top",
@@ -637,6 +709,15 @@
                                             ]
                                         }
                                     ]
+                                }
+                            },
+                            {
+                                "type":"tab",
+                                "header":"Round-Robin",
+                                "content":{
+                                    "type":"dockpanel",
+                                    "horizontalAlignment":"stretch",
+                                    "verticalAlignment":"stretch"
                                 }
                             }
                         ]                        
