@@ -157,7 +157,13 @@
         "highlighterSettings":{
             "type":"object",
             "properties": {
-                "enable":{
+                "showBorder":{
+                    "type":"boolean"
+                },
+                "showNumber":{
+                    "type":"boolean"
+                },
+                "highlightFullSize":{
                     "type":"boolean"
                 }
             }

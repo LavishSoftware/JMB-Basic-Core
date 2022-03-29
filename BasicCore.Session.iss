@@ -15,6 +15,64 @@ objectdef basicCore
     }
 }
 
+objectdef basicCore_highlighter
+{
+    method Initialize()
+    {
+    }
+
+    method Shutdown()
+    {
+        This:Disable
+    }
+
+    method Enable()
+    {
+        LavishScript:RegisterEvent[OnFrame]
+        Event[OnFrame]:AttachAtom[This:OnFrame]
+    }
+
+    method Disable()
+    {
+        Event[OnFrame]:DetachAtom[This:OnFrame]
+
+        LGUI2.Element[basicCore.highlighter.border]:SetVisibility[Hidden]
+        LGUI2.Element[basicCore.highlighter.number]:SetVisibility[Hidden]
+    }
+
+    member:bool IsFullSize()
+    {
+        if ${Display.ViewableWidth}!=${Display.Width}
+            return FALSE
+        if ${Display.ViewableHeight}!=${Display.Height}
+            return FALSE
+        return TRUE
+    }
+
+    method OnFrame()
+    {
+        if ${Display.Window.IsForeground}
+        {
+            if !${BasicCore.Settings.Highlighter.Get[showBorder]} || (${This.IsFullSize} && !${BasicCore.Settings.Highlighter.Get[highlightFullSize]})
+                LGUI2.Element[basicCore.highlighter.border]:SetVisibility[Hidden]
+            else
+                LGUI2.Element[basicCore.highlighter.border]:SetVisibility[Visible]
+
+
+            LGUI2.Element[basicCore.highlighter.number]:SetVisibility[Hidden]
+        }
+        else
+        {
+            LGUI2.Element[basicCore.highlighter.border]:SetVisibility[Hidden]
+
+            if ${BasicCore.Settings.Highlighter.Get[showNumber]}
+                LGUI2.Element[basicCore.highlighter.number]:SetVisibility[Visible]
+            else
+                LGUI2.Element[basicCore.highlighter.number]:SetVisibility[Hidden]
+        }        
+    }
+}
+
 objectdef basicCore_performance
 {    
     method ApplyMaxFPS(string prefix, jsonvalueref json)
