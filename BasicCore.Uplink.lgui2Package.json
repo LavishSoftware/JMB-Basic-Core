@@ -431,11 +431,20 @@
                                                     }
                                                 },
                                                 {
-                                                    "name":"Highlighter",
+                                                    "name":"Highlighter Border",
                                                     "dataBinding":{
-                                                      "pullFormat":"${_CONTEXT_.Object.Highlighter.Get[enable]}",
+                                                      "pullFormat":"${_CONTEXT_.Object.Highlighter.Get[showBorder]}",
                                                       "pullReplaceNull":"",
-                                                      "pushFormat":["_CONTEXT_.Object.Highlighter:SetBool[enable,\"","\"]"]
+                                                      "pushFormat":["_CONTEXT_.Object.Highlighter:SetBool[showBorder,\"","\"]"]
+                                                    },
+                                                    "editTemplate":"propertyview.checkbox"                            
+                                                },
+                                                {
+                                                    "name":"Highlighter Slot Number",
+                                                    "dataBinding":{
+                                                      "pullFormat":"${_CONTEXT_.Object.Highlighter.Get[showNumber]}",
+                                                      "pullReplaceNull":"",
+                                                      "pushFormat":["_CONTEXT_.Object.Highlighter:SetBool[showNumber,\"","\"]"]
                                                     },
                                                     "editTemplate":"propertyview.checkbox"                            
                                                 },
