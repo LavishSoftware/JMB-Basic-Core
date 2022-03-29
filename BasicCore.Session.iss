@@ -15,6 +15,44 @@ objectdef basicCore
     }
 }
 
+objectdef basicCore_performance
+{    
+    method ApplyMaxFPS(string prefix, jsonvalueref json)
+    {
+        variable string useLine="${prefix~}"
+        if ${json.Has[maxFPS]}
+            useLine:Concat[" ${json.Get[maxFPS]~}"]
+
+        if ${json.Has[calculate]}
+        {
+            if ${json.Get[calculate]}
+                useLine:Concat[" -calculate"]
+            else
+                useLine:Concat[" -absolute"]
+        }
+    }
+
+    method ApplyJSON(jsonvalueref json)
+    {
+        if ${json.Has[lockAffinity]}
+        {
+            if ${json.Get[lockAffinity]}
+                proclock on
+            else
+                proclock off
+        }
+
+        if ${json.Get[background].Type.Equal[object]}
+        {
+            This:ApplyMaxFPS["-bg","json.Get[background]"]
+        }
+        if ${json.Get[foreground].Type.Equal[object]}
+        {
+            This:ApplyMaxFPS["-fg","json.Get[foreground]"]
+        }
+    }
+}
+
 variable(global) basicCore BasicCore
 
 function main()
