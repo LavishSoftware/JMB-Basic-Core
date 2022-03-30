@@ -147,6 +147,8 @@ objectdef basicCore_launcher
         variable jsonvalue jo
         jo:SetValue["${launcherProfile.AsJSON~}"]
 
+        jo:SetInteger[id,${Slot}]
+
         if ${launcherProfile.Has[name]}
             jo:SetString[display_name,"${launcherProfile.Get[name]~}"]
 
@@ -157,11 +159,28 @@ objectdef basicCore_launcher
         return TRUE
     }
 
+    ; Find a Slot that does not currently have a running game instance 
+    member:uint FindEmptySlot()
+    {
+        variable jsonvalueref currentSlots="JMB.Slots"
+        variable uint i
+        for (i:Set[1] ; ${i} <= ${currentSlots.Used} ; i:Inc)
+        {
+            if !${currentSlots.Get[${i},"processId"]}
+            {
+                return ${i}
+            }
+        }
+        return 0
+    }
+
     method Launch(jsonvalueref launcherProfile, uint Slot=0)
     {
         if !${Slot}
         {
-            Slot:Set["${JMB.AddSlot.ID}"]
+            Slot:Set["${This.FindEmptySlot}"]
+            if !${Slot}
+                Slot:Set["${JMB.AddSlot.ID}"]
         }
         else
         {
