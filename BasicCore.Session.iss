@@ -2,16 +2,43 @@
 
 objectdef basicCore
 {
+    variable taskmanager TaskManager=${LMAC.NewTaskManager["basicCore"]}
+
     variable basicCore_settings Settings
+    variable basicCore_highlighter Highlighter
+    variable basicCore_performance Performance
+    variable basicCore_windowSwitching WindowSwitching
 
     method Initialize()
     {
         LGUI2:LoadPackageFile[BasicCore.Session.lgui2Package.json]
+        This:LoadSettings
+
+        Highlighter:Enable
+        This:ApplySettings
     }
 
     method Shutdown()
     {
+        TaskManager:Destroy
+
         LGUI2:UnloadPackageFile[BasicCore.Session.lgui2Package.json]
+    }    
+
+    method LoadSettings()
+    {
+        Settings:LoadDefaults
+        if ${Settings.SettingsFileExists}
+        {
+            Settings:LoadFile
+        }        
+    }
+
+    method ApplySettings()
+    {
+        Performance:ApplyJSON[Settings.Performance]
+        WindowSwitching:ApplyJSON[Settings.Hotkeys]
+
     }
 }
 
@@ -88,6 +115,9 @@ objectdef basicCore_performance
             else
                 useLine:Concat[" -absolute"]
         }
+
+        echo "maxfps ${useLine~}"
+        maxfps ${useLine~}
     }
 
     method ApplyJSON(jsonvalueref json)
@@ -137,7 +167,6 @@ objectdef basicCore_windowSwitching
 
         LGUI2:RemoveBinding[basicCore.NextWindow]
         LGUI2:RemoveBinding[basicCore.PreviousWindow]
-; NumSlotHotkeys
         
         variable uint i
         for (i:Set[1] ; ${i}<=${NumSlotHotkeys} ; i:Inc)
@@ -201,6 +230,7 @@ objectdef basicCore_windowSwitching
     ; Installs a Hotkey, given a name, a key combination, and LavishScript code to execute on PRESS
     method InstallHotkey(string name, string keyCombo, string methodName)
     {
+        echo "InstallHotkey ${name~}: ${keyCombo~}"
         variable jsonvalue joBinding
         ; initialize a LGUI2 input binding object with JSON
         joBinding:SetValue["$$>
@@ -228,11 +258,19 @@ objectdef basicCore_windowSwitching
         if !${Slot}
             return 0
 
-        Slot:Inc
-        if ${Slot}>${JMB.Slots.Used}
-            return 1
+        while 1
+        {
 
-        return ${Slot}
+            Slot:Inc
+            if ${Slot}>${JMB.Slots.Used}
+                Slot:Set[1]
+
+            if ${Slot}==${JMB.Slot}
+                return 0
+
+            if ${JMB.Slot[${Slot}].ProcessID}
+                return ${Slot}
+        }        
     }
 
     member:uint GetPreviousSlot()
@@ -241,11 +279,19 @@ objectdef basicCore_windowSwitching
         if !${Slot}
             return 0
 
-        Slot:Dec
-        if !${Slot}
-            return ${JMB.Slots.Used}
+        while 1
+        {
 
-        return ${Slot}
+            Slot:Dec
+            if !${Slot}
+                Slot:Set[${JMB.Slots.Used}]
+
+            if ${Slot}==${JMB.Slot}
+                return 0
+
+            if ${JMB.Slot[${Slot}].ProcessID}
+                return ${Slot}
+        }        
     }
 
     method PreviousWindow()
@@ -257,6 +303,7 @@ objectdef basicCore_windowSwitching
         if !${Display.Window.IsForeground}
             return
 
+        echo PreviousWindow: ${previousSlot}
         uplink focus "jmb${previousSlot}"
         relay "jmb${previousSlot}" "Event[OnHotkeyFocused]:Execute"
     }
@@ -270,6 +317,7 @@ objectdef basicCore_windowSwitching
         if !${Display.Window.IsForeground}
             return
 
+        echo NextWindow: ${nextSlot}
         uplink focus "jmb${nextSlot}"
         relay "jmb${nextSlot}" "Event[OnHotkeyFocused]:Execute"
     }
