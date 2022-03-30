@@ -181,5 +181,6 @@ objectdef basicCore_settings
             "windowLayout":${WindowLayout.AsJSON~}
         }
         <$$"]
+        return jo
     }
 }
