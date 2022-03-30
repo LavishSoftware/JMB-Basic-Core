@@ -27,6 +27,7 @@
         },
         {
             "type":"border",
+            "visibility":"hidden",
             "name":"basicCore.highlighter.number",
             "padding":8,
             "margin":8,
