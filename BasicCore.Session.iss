@@ -53,7 +53,7 @@ objectdef basicCore_highlighter
     {
         if ${Display.Window.IsForeground}
         {
-            if !${BasicCore.Settings.Highlighter.Get[showBorder]} || (${This.IsFullSize} && !${BasicCore.Settings.Highlighter.Get[highlightFullSize]})
+            if !${BasicCore.Settings.Highlighter.GetBool[showBorder]} || (${This.IsFullSize} && !${BasicCore.Settings.Highlighter.GetBool[highlightFullSize]})
                 LGUI2.Element[basicCore.highlighter.border]:SetVisibility[Hidden]
             else
                 LGUI2.Element[basicCore.highlighter.border]:SetVisibility[Visible]
@@ -65,7 +65,7 @@ objectdef basicCore_highlighter
         {
             LGUI2.Element[basicCore.highlighter.border]:SetVisibility[Hidden]
 
-            if ${BasicCore.Settings.Highlighter.Get[showNumber]}
+            if ${BasicCore.Settings.Highlighter.GetBool[showNumber]}
                 LGUI2.Element[basicCore.highlighter.number]:SetVisibility[Visible]
             else
                 LGUI2.Element[basicCore.highlighter.number]:SetVisibility[Hidden]
@@ -79,11 +79,11 @@ objectdef basicCore_performance
     {
         variable string useLine="${prefix~}"
         if ${json.Has[maxFPS]}
-            useLine:Concat[" ${json.Get[maxFPS]~}"]
+            useLine:Concat[" ${json.GetInteger[maxFPS]~}"]
 
         if ${json.Has[calculate]}
         {
-            if ${json.Get[calculate]}
+            if ${json.GetBool[calculate]}
                 useLine:Concat[" -calculate"]
             else
                 useLine:Concat[" -absolute"]
@@ -94,7 +94,7 @@ objectdef basicCore_performance
     {
         if ${json.Has[lockAffinity]}
         {
-            if ${json.Get[lockAffinity]}
+            if ${json.GetBool[lockAffinity]}
                 proclock on
             else
                 proclock off
