@@ -267,7 +267,14 @@
                                                     "_dock":"bottom",
                                                     "type":"button",
                                                     "content":"Launch!",
-                                                    "horizontalAlignment":"right"
+                                                    "horizontalAlignment":"right",
+                                                    "eventHandlers":{
+                                                        "onPress":{
+                                                            "type":"method",
+                                                            "object":"BasicCore",
+                                                            "method":"OnLaunchButton"
+                                                        }
+                                                    }
                                                 }
                                             ]
                                         }

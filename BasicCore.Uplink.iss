@@ -119,10 +119,20 @@ objectdef basicCore
     {
         echo OnDeleteLaunchProfileButton
 
-        if !${SelectedLauncherProfile.NotNULLOrEmpty}
+        if !${SelectedLauncherProfile.Reference(exists)}
             return
 
-        Settings:EraseLauncherProfile[${SelectedLauncherProfile~}]
+        Settings:EraseLauncherProfile[${SelectedLauncherProfile.Get[name]~}]
+    }
+
+    method OnLaunchButton()
+    {
+        echo OnLaunchButton
+
+        if !${SelectedLauncherProfile.Reference(exists)}
+            return
+
+        Launcher:Launch[SelectedLauncherProfile]
     }
 
 }
@@ -151,7 +161,7 @@ objectdef basicCore_launcher
     {
         if !${Slot}
         {
-            Slot:Set["${JMB.Addslot.ID}"]
+            Slot:Set["${JMB.AddSlot.ID}"]
         }
         else
         {
