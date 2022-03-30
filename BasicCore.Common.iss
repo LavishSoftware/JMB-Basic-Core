@@ -164,7 +164,8 @@ objectdef basicCore_settings
 
     method LoadDefaults()
     {
-        This:FromJSON["LGUI2.Skin[default].Template[basicCore.defaultSettings]"]
+        if ${LGUI2.Skin[default].Template[basicCore.defaultSettings](exists)}
+            This:FromJSON["LGUI2.Skin[default].Template[basicCore.defaultSettings]"]
     }
 
     member:jsonvalueref AsJSON()
