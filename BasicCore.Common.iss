@@ -4,6 +4,7 @@ objectdef basicCore_settings
     variable jsonvalue Highlighter="{}"
     variable jsonvalue Hotkeys="{}"
     variable jsonvalue Performance="{}"
+    variable jsonvalue RoundRobin="{}"
     variable jsonvalue WindowLayout="{}"
 
     variable filepath AgentFolder="${Script.CurrentDirectory~}"
@@ -27,6 +28,7 @@ objectdef basicCore_settings
         Highlighter:SetValue["${jo.Get[highlighter].AsJSON~}"]
         Hotkeys:SetValue["${jo.Get[hotkeys].AsJSON~}"]
         Performance:SetValue["${jo.Get[performance].AsJSON~}"]
+        RoundRobin:SetValue["${jo.Get[roundRobin].AsJSON~}"]
         WindowLayout:SetValue["${jo.Get[windowLayout].AsJSON~}"]
 
         LGUI2.Element[basicCore.events]:FireEventHandler[onLauncherProfilesUpdated]
@@ -170,11 +172,12 @@ objectdef basicCore_settings
         variable jsonvalue jo
         jo:SetValue["$$>
         {
-            "$schema": "BasicCore.Schema.json",
+            "$schema":"BasicCore.Schema.json",
             "launcher":${Launcher.AsJSON~},
             "highlighter":${Highlighter.AsJSON~},
             "hotkeys":${Hotkeys.AsJSON~},
             "performance":${Performance.AsJSON~},
+            "roundRobin":${RoundRobin.AsJSON~},
             "windowLayout":${WindowLayout.AsJSON~}
         }
         <$$"]
