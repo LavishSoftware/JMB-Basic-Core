@@ -27,10 +27,12 @@
                     "type":"string"
                 },
                 "swapOnActivate":{
-                    "type":"boolean"
+                    "type":"boolean",
+                    "default":true
                 },
                 "swapOnHotkeyFocused":{
-                    "type":"boolean"
+                    "type":"boolean",
+                    "default":true
                 },
                 "leaveHole":{
                     "type":"boolean"
@@ -42,7 +44,8 @@
                     "type":"boolean"
                 },
                 "rescaleWindows":{
-                    "type":"boolean"
+                    "type":"boolean",
+                    "default":true
                 },
                 "useMonitors":{
                     "type":"array",
