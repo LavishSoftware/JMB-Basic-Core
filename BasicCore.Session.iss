@@ -1,4 +1,5 @@
 #include "BasicCore.Common.iss"
+#include "BasicCore.Session.WindowLayout.iss"
 
 objectdef basicCore
 {
@@ -7,6 +8,7 @@ objectdef basicCore
     variable basicCore_settings Settings
     variable basicCore_highlighter Highlighter
     variable basicCore_performance Performance
+    variable basicCore_windowLayout WindowLayout
     variable basicCore_windowSwitching WindowSwitching
 
     method Initialize()
@@ -38,7 +40,7 @@ objectdef basicCore
     {
         Performance:ApplyJSON[Settings.Performance]
         WindowSwitching:ApplyJSON[Settings.Hotkeys]
-
+        WindowLayout:ApplyJSON[Settings.WindowLayout]
     }
 }
 
