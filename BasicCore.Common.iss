@@ -34,10 +34,15 @@ objectdef basicCore_settings
         LGUI2.Element[basicCore.events]:FireEventHandler[onLauncherProfilesUpdated]
     }
 
-        ; Determine if our settings file exists
+    ; Determine if our settings file exists
     member:bool SettingsFileExists()
     {
         return ${AgentFolder.FileExists[BasicCore.Settings.json]}
+    }
+
+    member:string SettingsFileName()
+    {
+        return "${This.AgentFolder~}/BasicCore.Settings.json"
     }
 
     member:uint FindInArray(jsonvalueref arr, string key, string value)
@@ -147,7 +152,7 @@ objectdef basicCore_settings
     {
         variable jsonvalue jo
 
-        if !${jo:ParseFile["${Script.CurrentDirectory~}/BasicCore.Settings.json"](exists)} || !${jo.Type.Equal[object]}
+        if !${jo:ParseFile["${This.SettingsFileName~}"](exists)} || !${jo.Type.Equal[object]}
             return FALSE
 
         This:FromJSON[jo]
@@ -161,7 +166,7 @@ objectdef basicCore_settings
         if !${jo.Type.Equal[object]}
             return FALSE
 
-        jo:WriteFile["${Script.CurrentDirectory~}/BasicCore.Settings.json",multiline]
+        jo:WriteFile["${This.SettingsFileName~}",multiline]
         return TRUE
     }
 

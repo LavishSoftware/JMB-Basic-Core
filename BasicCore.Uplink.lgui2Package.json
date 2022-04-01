@@ -197,6 +197,15 @@
                         "type":"dockpanel",
                         "children":[
                             {
+                                "type":"textbox",
+                                "_dock":"top",
+                                "horizontalAlignment":"stretch",
+                                "horizontalContentAlignment":"center",
+                                "textBinding":{
+                                    "pullFormat":"${BasicCore.Settings.SettingsFileName}"
+                                }
+                            },
+                            {
                                 "type":"button",
                                 "_dock":"left",
                                 "content":"Save and Apply",
