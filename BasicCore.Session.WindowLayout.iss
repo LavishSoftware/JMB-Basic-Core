@@ -115,6 +115,7 @@ objectdef basicCore_windowLayout
         if !${CurrentLayout.GetBool[focusFollowsMouse]}
             return
 
+;        echo ApplyFocusFollowsMouse
         This:FocusSelf
     }
 
@@ -122,23 +123,28 @@ objectdef basicCore_windowLayout
     {
         if ${Display.Window.IsForeground}
         {
+;            echo "FocusSelf: windowvisibility foreground"
             windowvisibility foreground
-            return
+            return TRUE
         }
 
-        relay foreground "BasicCore.WindowLayout:FocusWindow[${Display.Window~}]"
+;        echo "FocusSelf: relay foreground \"BasicCore.WindowLayout:FocusWindow[${Display.Window~}]\""
+        relay foreground -noredirect "BasicCore.WindowLayout:FocusWindow[${Display.Window~}]"
+        return TRUE
     }
 
     method FocusSession(string name)
     {
         if !${Display.Window.IsForeground}
-            return
+            return FALSE
         uplink focus "${name~}"
+        return TRUE
     }
 
     method FocusWindow(gdiwindow hWnd)
     {
-        hWnd:SetForegroundWindow
+;        echo FocusWindow: hWnd=${hWnd} 
+        return ${hWnd:SetForegroundWindow(exists)}
     }
 
     method Fullscreen()
