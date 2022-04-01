@@ -119,6 +119,9 @@
                     "items":{
                         "$ref":"#/definitions/virtualFile"
                     }
+                },
+                "useDefaultVirtualFiles":{
+                    "type":"boolean"
                 }
             },
             "required":["name"]

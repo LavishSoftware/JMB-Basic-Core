@@ -198,6 +198,18 @@
                         "children":[
                             {
                                 "type":"button",
+                                "_dock":"left",
+                                "content":"Save and Apply",
+                                "eventHandlers": {
+                                    "onPress":{
+                                        "type":"method",
+                                        "object":"BasicCore",
+                                        "method":"OnSaveAndApplyButton"
+                                    }
+                                }
+                            },
+                            {
+                                "type":"button",
                                 "_dock":"right",
                                 "content":"Reload Agent",
                                 "eventHandlers": {
@@ -394,6 +406,15 @@
                                                       "pushFormat":["_CONTEXT_.Object:SetString[parameters,\"","\"]"]
                                                     },
                                                     "editTemplate":"propertyview.textbox"                            
+                                                },
+                                                {
+                                                    "name":"Use default Virtual Files",
+                                                    "dataBinding":{
+                                                      "pullFormat":"${_CONTEXT_.Object.Get[useDefaultVirtualFiles]}",
+                                                      "pullReplaceNull":"",
+                                                      "pushFormat":["_CONTEXT_.Object:SetBool[useDefaultVirtualFiles,\"","\"]"]
+                                                    },
+                                                    "editTemplate":"propertyview.checkbox"                            
                                                 }
                                             ]
                                         }

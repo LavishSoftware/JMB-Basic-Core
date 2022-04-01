@@ -71,7 +71,7 @@ objectdef basicCore
         variable jsonvalue joGames="${JMB.GameConfiguration.AsJSON~}"
         joGames:Erase["_set_guid"]
 
-        joGames:ForEach["Settings:NewLauncherProfile[\"\${ForEach.Key~}\",\"\${ForEach.Key~}\",\"\${ForEach.Key~} Default Profile\"]"]
+        joGames:ForEach["Settings:NewLauncherProfile[\"\${ForEach.Key~}\",\"\${ForEach.Key~}\"]"]
     }
 
     method RefreshGames()
@@ -135,10 +135,89 @@ objectdef basicCore
         Launcher:Launch[SelectedLauncherProfile]
     }
 
+    method OnSaveAndApplyButton()
+    {
+        Settings:StoreFile
+        ; restart agent in sessions
+        relay all "JMB.Agent[\"Basic Core\"]:Stop:Start"
+    }
+
 }
 
 objectdef basicCore_launcher
 {
+    member:string GetKnownGame(jsonvalueref jo)
+    {
+        if ${jo.Has[executable]}
+        {
+            switch ${jo.Get[executable]~}
+            {
+                case wow.exe
+                case wow-t.exe
+                case wowclassic.exe
+                case world of warcraft launcher.exe
+                    return "World of Warcraft"
+                case eqgame.exe
+                case testeqgame.exe
+                    return "EverQuest"
+            }
+
+            if !${jo.Has[game]}
+                return "${jo.Get[executable]~}"
+        }
+
+        if ${jo.Has[game]}
+        {
+            if ${jo.Get[game]~.Find[EverQuest]}
+                return "EverQuest"
+            if ${jo.Get[game]~.Find[World of Warcraft]}
+                return "World of Warcraft"
+
+            return "${jo.Get[game]~}"
+        }        
+    }
+
+    method AddVirtualFile(jsonvalueref jo, string _pattern, string _replacement)
+    {
+        variable uint idx
+
+        variable jsonvalueref joVirtualFiles
+        if !${jo.Has[virtualFiles]}
+            jo:Set[virtualFiles,"[]"]
+
+        joVirtualFiles:SetReference["jo.Get[virtualFiles]"]
+
+        idx:Set[${Settings.FindInArray["joVirtualFiles","pattern","${_pattern~}"]}]
+        if ${idx}
+        {
+            joVirtualFiles.Get[${idx}]:SetString[replacement,"${_replacement~}"]
+            return
+        }
+
+        joVirtualFiles:Add["$$>
+        {
+            "pattern":${_pattern.AsJSON~},
+            "replacement":${_replacement.AsJSON~}
+        }
+        <$$"]
+
+    }
+
+    method AddDefaultVirtualFiles(uint Slot, jsonvalueref jo)
+    {
+        switch ${This.GetKnownGame[jo]~}
+        {
+            case EverQuest
+                This:AddVirtualFile[jo,"*/eqclient.ini","{1}/eqclient.Generic.JMB${Slot}.ini"]
+                This:AddVirtualFile[jo,"*/eqlsPlayerData.ini","{1}/eqlsPlayerData.Generic.JMB${Slot}.ini"]
+                break
+            case World of Warcraft
+                This:AddVirtualFile[jo,"*\/Config.WTF","{1}/Condif.Generic.JMB${Slot}.ini"]
+                This:AddVirtualFile[jo,"Software/Blizzard Entertainment/World of Warcraft/Client/\*","Software/Blizzard Entertainment/World of Warcraft/Client-JMB${Slot}/{1}"]
+                break
+        }
+    }
+
     method InstallCharacter(uint Slot, jsonvalueref launcherProfile)
     {
         if !${launcherProfile.Type.Equal[object]}
@@ -154,6 +233,11 @@ objectdef basicCore_launcher
 
         if ${launcherProfile.Has[game]}
             jo:SetString[gameProfile,"${launcherProfile.Get[game]~} Default Profile"]
+
+        if ${launcherProfile.GetBool[useDefaultVirtualFiles]}
+        {
+            This:AddDefaultVirtualFiles[${Slot},jo]
+        }
 
         JMB:AddCharacter["${jo.AsJSON~}"]
         return TRUE
