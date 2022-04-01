@@ -748,15 +748,6 @@
                                         }
                                     ]
                                 }
-                            },
-                            {
-                                "type":"tab",
-                                "header":"Round-Robin",
-                                "content":{
-                                    "type":"dockpanel",
-                                    "horizontalAlignment":"stretch",
-                                    "verticalAlignment":"stretch"
-                                }
                             }
                         ]                        
                     }
