@@ -94,9 +94,20 @@ objectdef basicCore_settings
             return
         }
 
+        if !${Launcher.Type.Equal[object]}
+        {
+            Launcher:SetValue["{}"]            
+        }
+
+        if !${Launcher.Has[profiles]} || !${Launcher.Get[profiles].Type.Equal[array]}
+            Launcher:Set[profiles,"[]"]
+
+        variable jsonvalueref profiles
+        profiles:SetReference["Launcher.Get[profiles]"]
+
         ; find existing profile
         variable uint i
-        i:Set[${This.FindInArray[profiles,name,"${name~}"]}]
+        i:Set[${This.FindInArray["profiles",name,"${name~}"]}]
         if ${i}
         {
             return FALSE
@@ -122,16 +133,8 @@ objectdef basicCore_settings
                 jo:SetString[parameters,"${joGameProfile.Get[Parameters]~}"]
         }
 
-        if !${Launcher.Type.Equal[object]}
-        {
-            Launcher:SetValue["{}"]            
-        }
+        jo:SetBool[useDefaultVirtualFiles,1]
 
-        if !${Launcher.Has[profiles]} || !${Launcher.Get[profiles].Type.Equal[array]}
-            Launcher:Set[profiles,"[]"]
-
-        variable jsonvalueref profiles
-        profiles:SetReference["Launcher.Get[profiles]"]
 
         ; add new profile
         profiles:AddByRef[jo]
