@@ -26,7 +26,7 @@ objectdef basicCore
         This:ImportGameProfiles
 
         if ${Settings.Launcher.Has[lastSelectedProfile]}
-            SelectedLauncherProfile:Set["${Settings.Launcher.Get[lastSelectedProfile]}"]
+            This:SetSelectedLauncherProfile["${Settings.Launcher.Get[lastSelectedProfile]~}",0]
     }
 
     method Shutdown()
@@ -50,20 +50,25 @@ objectdef basicCore
         LGUI2.Element[basicCore.events]:FireEventHandler[onEditingWindowLayoutUpdated]
     }
 
-    method SetSelectedLauncherProfile(string name)
+    method SetSelectedLauncherProfile(string name, bool storeSettings=TRUE)
     {
         echo SetSelectedLauncherProfile ${name~}
         variable uint id
         id:Set[${Settings.FindLauncherProfile["${name~}"]}]
         if !${id}
         {
+            Settings.Launcher:Erase[lastSelectedProfile]
             SelectedLauncherProfile:SetReference[NULL]
-            return
+        }
+        else
+        {
+            Settings.Launcher:SetString[lastSelectedProfile,"${name~}"]
+            SelectedLauncherProfile:SetReference["Settings.Launcher.Get[profiles,${id}]"]
         }
 
-        SelectedLauncherProfile:SetReference["Settings.Launcher.Get[profiles,${id}]"]
-
         LGUI2.Element[basicCore.events]:FireEventHandler[onSelectedLauncherProfileUpdated]
+        if ${storeSettings}
+            Settings:StoreFile
     }
 
     method ImportGameProfiles()
