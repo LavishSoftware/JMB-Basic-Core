@@ -77,6 +77,17 @@
               }
             }
         },
+        "basicCore.windowLayoutStyleView":{
+            "jsonTemplate":"listboxitem",
+            "padding":2,
+            "content":{
+              "type":"textblock",
+              "textBinding":{
+                "pullFormat":"${_CONTEXTITEMDATA_.Get[name]}",
+                "pullReplaceNull":""
+              }
+            }
+        },
         "basicCore.slotHotkeyView":{
             "jsonTemplate":"listboxitem",
             "padding":2,
@@ -169,6 +180,19 @@
             "content":{
                 "jsonTemplate":"basicCore.windowLayoutRegionEdit"
             }
+        },
+        "basicCore.windowLayoutStyles":{
+            "styles":[
+                {
+                    "name":"horizontal"
+                },
+                {
+                    "name":"vertical"
+                },
+                {
+                    "name":"custom"
+                }
+            ]
         }
     },
     "elements":[
@@ -698,12 +722,29 @@
                                                 },
                                                 {
                                                     "name":"Style",
-                                                    "dataBinding":{
+                                                    "-dataBinding":{
                                                       "pullFormat":"${_CONTEXT_.Object.Get[style]}",
                                                       "pullReplaceNull":"",
                                                       "pushFormat":["_CONTEXT_.Object:SetString[style,\"","\"]"]
                                                     },
-                                                    "editTemplate":"propertyview.textbox"                            
+                                                    "editTemplate":"propertyview.combobox",
+                                                    "controlData":{
+                                                        "selectedItemBinding":{
+                                                            "pullFormat":"${BasicCore.EditingWindowLayout.Get[style]}",
+                                                            "pullReplaceNull":"",
+                                                            "pushFormat":["BasicCore.EditingWindowLayout:SetString[style,\"","\"]"]
+                                                        },
+                                                        "selectedItemBindingProperty":"name",
+                                                        "itemsBinding":{
+                                                            "pullFormat":"${LGUI2.Skin[default].Template[basicCore.windowLayoutStyles].Get[styles]}"
+                                                        },
+                                                        "itemViewGenerators":{
+                                                            "default":{
+                                                                "type":"template",
+                                                                "template":"basicCore.windowLayoutStyleView"
+                                                            }
+                                                        }
+                                                    }
                                                 },
                                                 {
                                                     "name":"Swap when Focused",
