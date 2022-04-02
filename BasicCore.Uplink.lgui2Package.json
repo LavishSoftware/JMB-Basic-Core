@@ -368,6 +368,18 @@
                                                     }
                                                 },
                                                 {
+                                                    "type":"button",
+                                                    "_dock":"right",
+                                                    "content":"New",
+                                                    "eventHandlers":{
+                                                        "onPress":{
+                                                            "type":"method",
+                                                            "object":"BasicCore",
+                                                            "method":"OnNewLaunchProfileButton"
+                                                        }
+                                                    }
+                                                },
+                                                {
                                                     "type":"combobox",
                                                     "_dock":"left",
                                                     "horizontalAlignment": "stretch",
@@ -700,6 +712,18 @@
                                                             "type":"method",
                                                             "object":"BasicCore",
                                                             "method":"OnCopyWindowLayoutButton"
+                                                        }
+                                                    }
+                                                },
+                                                {
+                                                    "type":"button",
+                                                    "_dock":"right",
+                                                    "content":"New",
+                                                    "eventHandlers":{
+                                                        "onPress":{
+                                                            "type":"method",
+                                                            "object":"BasicCore",
+                                                            "method":"OnNewWindowLayoutButton"
                                                         }
                                                     }
                                                 },

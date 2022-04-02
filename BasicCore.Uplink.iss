@@ -102,10 +102,38 @@ objectdef basicCore
         LGUI2.Element[basicCore.events]:FireEventHandler[onGamesUpdated]
     }
 
+    method OnNewLaunchProfileButton()
+    {
+        echo OnNewLaunchProfileButton
+        variable uint id
+        id:Set[${Settings.FindLauncherProfile["New Launch Profile"]}]
+        if ${id}
+        {
+            This:SetSelectedLauncherProfile["New Launch Profile",FALSE]
+            return
+        }
+
+        variable jsonvalue jo
+        jo:SetValue["$$>
+        {
+            "name":"New Launch Profile"
+        }
+        <$$"]
+        Settings.Launcher.Get[profiles]:Add["${jo~}"]
+        This:SetSelectedLauncherProfile["New Launch Profile",FALSE]
+        LGUI2.Element[basicCore.events]:FireEventHandler[onLauncherProfilesUpdated]
+        return TRUE
+    }
+
     method OnCopyLaunchProfileButton()
     {
+        echo OnCopyLaunchProfileButton
+
+        if !${SelectedLauncherProfile.Reference(exists)}
+            return
+
         variable uint id
-        id:Set[${Settings.FindLauncherProfile["${SelectedPullLauncherProfile~}"]}]
+        id:Set[${Settings.FindLauncherProfile["${SelectedLauncherProfile.Get[name]~}"]}]
         if !${id}
         {
             return
@@ -114,9 +142,10 @@ objectdef basicCore
 
         launcherProfile:SetValue["${Settings.Launcher.Get[profiles,${id}]~}"]
 
-        launcherProfile:Set[name,"Copy of ${SelectedPullLauncherProfile~}"]
-        Settings.Launcher.Profiles:Add["${launcherProfile~}"]
-        SelectedPullLauncherProfile:Set["${launcherProfile.Get[name]~}"]
+        launcherProfile:SetString[name,"Copy of ${SelectedLauncherProfile.Get[name]~}"]
+        Settings.Launcher.Get[profiles]:Add["${launcherProfile~}"]
+        This:SetSelectedLauncherProfile["${launcherProfile.Get[name]~}",FALSE]
+        LGUI2.Element[basicCore.events]:FireEventHandler[onLauncherProfilesUpdated]
         return TRUE
     }
 
@@ -128,6 +157,7 @@ objectdef basicCore
             return
 
         Settings:EraseLauncherProfile[${SelectedLauncherProfile.Get[name]~}]
+        LGUI2.Element[basicCore.events]:FireEventHandler[onLauncherProfilesUpdated]
     }
 
     method OnLaunchButton()
