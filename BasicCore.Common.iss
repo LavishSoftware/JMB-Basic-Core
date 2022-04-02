@@ -31,7 +31,7 @@ objectdef basicCore_settings
         RoundRobin:SetValue["${jo.Get[roundRobin].AsJSON~}"]
         WindowLayout:SetValue["${jo.Get[windowLayout].AsJSON~}"]
 
-        LGUI2.Element[basicCore.events]:FireEventHandler[onLauncherProfilesUpdated]
+        LGUI2.Element[basicCore.events]:FireEventHandler[onLaunchProfilesUpdated]
     }
 
     ; Determine if our settings file exists
@@ -65,22 +65,36 @@ objectdef basicCore_settings
         return ${This.FindInArray["WindowLayout.Get[layouts]","name","${name~}"]}
     }
 
-    member:uint FindLauncherProfile(string name)
+    member:uint FindLaunchProfile(string name)
     {
         return ${This.FindInArray["Launcher.Get[profiles]","name","${name~}"]}
     }
 
-    method EraseLauncherProfile(string name)
+    method EraseLaunchProfile(string name)
     {
         variable uint id
-        id:Set[${This.FindLauncherProfile["${name~}"]}]
+        id:Set[${This.FindLaunchProfile["${name~}"]}]
         if !${id}
         {
             return FALSE
         }
 
         Launcher.Get[profiles]:Erase[${id}]
-        LGUI2.Element[basicCore.events]:FireEventHandler[onLauncherProfilesUpdated]
+        LGUI2.Element[basicCore.events]:FireEventHandler[onLaunchProfilesUpdated]
+        return TRUE
+    }
+
+    method EraseWindowLayout(string name)
+    {
+        variable uint id
+        id:Set[${This.FindWindowLayout["${name~}"]}]
+        if !${id}
+        {
+            return FALSE
+        }
+
+        WindowLayout.Get[layouts]:Erase[${id}]
+        LGUI2.Element[basicCore.events]:FireEventHandler[onWindowLayoutsUpdated]
         return TRUE
     }
 
@@ -91,7 +105,7 @@ objectdef basicCore_settings
         return "joGames.Get[\"${gameName~}\",Profiles,\"${gameName~} Default Profile\"]"
     }
 
-    method NewLauncherProfile(string name, string gameName="")
+    method NewLaunchProfile(string name, string gameName="")
     {        
         if ${name.Equal[Generic]}
         {
@@ -144,7 +158,7 @@ objectdef basicCore_settings
         ; add new profile
         profiles:AddByRef[jo]
 
-        LGUI2.Element[basicCore.events]:FireEventHandler[onLauncherProfilesUpdated]
+        LGUI2.Element[basicCore.events]:FireEventHandler[onLaunchProfilesUpdated]
         return TRUE
     }
 

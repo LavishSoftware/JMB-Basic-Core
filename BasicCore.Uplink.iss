@@ -5,7 +5,7 @@ objectdef basicCore
     variable basicCore_settings Settings
     variable basicCore_launcher Launcher
 
-    variable weakref SelectedLauncherProfile
+    variable weakref SelectedLaunchProfile
 
     variable weakref EditingWindowLayout
 
@@ -26,7 +26,7 @@ objectdef basicCore
         This:ImportGameProfiles
 
         if ${Settings.Launcher.Has[lastSelectedProfile]}
-            This:SetSelectedLauncherProfile["${Settings.Launcher.Get[lastSelectedProfile]~}",0]
+            This:SetSelectedLaunchProfile["${Settings.Launcher.Get[lastSelectedProfile]~}",0]
     }
 
     method Shutdown()
@@ -50,23 +50,23 @@ objectdef basicCore
         LGUI2.Element[basicCore.events]:FireEventHandler[onEditingWindowLayoutUpdated]
     }
 
-    method SetSelectedLauncherProfile(string name, bool storeSettings=TRUE)
+    method SetSelectedLaunchProfile(string name, bool storeSettings=TRUE)
     {
-        echo SetSelectedLauncherProfile ${name~}
+        echo SetSelectedLaunchProfile ${name~}
         variable uint id
-        id:Set[${Settings.FindLauncherProfile["${name~}"]}]
+        id:Set[${Settings.FindLaunchProfile["${name~}"]}]
         if !${id}
         {
             Settings.Launcher:Erase[lastSelectedProfile]
-            SelectedLauncherProfile:SetReference[NULL]
+            SelectedLaunchProfile:SetReference[NULL]
         }
         else
         {
             Settings.Launcher:SetString[lastSelectedProfile,"${name~}"]
-            SelectedLauncherProfile:SetReference["Settings.Launcher.Get[profiles,${id}]"]
+            SelectedLaunchProfile:SetReference["Settings.Launcher.Get[profiles,${id}]"]
         }
 
-        LGUI2.Element[basicCore.events]:FireEventHandler[onSelectedLauncherProfileUpdated]
+        LGUI2.Element[basicCore.events]:FireEventHandler[onSelectedLaunchProfileUpdated]
         if ${storeSettings}
             Settings:StoreFile
     }
@@ -76,7 +76,7 @@ objectdef basicCore
         variable jsonvalue joGames="${JMB.GameConfiguration.AsJSON~}"
         joGames:Erase["_set_guid"]
 
-        joGames:ForEach["Settings:NewLauncherProfile[\"\${ForEach.Key~}\",\"\${ForEach.Key~}\"]"]
+        joGames:ForEach["Settings:NewLaunchProfile[\"\${ForEach.Key~}\",\"\${ForEach.Key~}\"]"]
     }
 
     method RefreshGames()
@@ -106,10 +106,10 @@ objectdef basicCore
     {
         echo OnNewLaunchProfileButton
         variable uint id
-        id:Set[${Settings.FindLauncherProfile["New Launch Profile"]}]
+        id:Set[${Settings.FindLaunchProfile["New Launch Profile"]}]
         if ${id}
         {
-            This:SetSelectedLauncherProfile["New Launch Profile",FALSE]
+            This:SetSelectedLaunchProfile["New Launch Profile",FALSE]
             return
         }
 
@@ -120,8 +120,8 @@ objectdef basicCore
         }
         <$$"]
         Settings.Launcher.Get[profiles]:Add["${jo~}"]
-        This:SetSelectedLauncherProfile["New Launch Profile",FALSE]
-        LGUI2.Element[basicCore.events]:FireEventHandler[onLauncherProfilesUpdated]
+        This:SetSelectedLaunchProfile["New Launch Profile",FALSE]
+        LGUI2.Element[basicCore.events]:FireEventHandler[onLaunchProfilesUpdated]
         return TRUE
     }
 
@@ -129,23 +129,23 @@ objectdef basicCore
     {
         echo OnCopyLaunchProfileButton
 
-        if !${SelectedLauncherProfile.Reference(exists)}
+        if !${SelectedLaunchProfile.Reference(exists)}
             return
 
         variable uint id
-        id:Set[${Settings.FindLauncherProfile["${SelectedLauncherProfile.Get[name]~}"]}]
+        id:Set[${Settings.FindLaunchProfile["${SelectedLaunchProfile.Get[name]~}"]}]
         if !${id}
         {
             return
         }
-        variable jsonvalue launcherProfile
+        variable jsonvalue launchProfile
 
-        launcherProfile:SetValue["${Settings.Launcher.Get[profiles,${id}]~}"]
+        launchProfile:SetValue["${Settings.Launcher.Get[profiles,${id}]~}"]
 
-        launcherProfile:SetString[name,"Copy of ${SelectedLauncherProfile.Get[name]~}"]
-        Settings.Launcher.Get[profiles]:Add["${launcherProfile~}"]
-        This:SetSelectedLauncherProfile["${launcherProfile.Get[name]~}",FALSE]
-        LGUI2.Element[basicCore.events]:FireEventHandler[onLauncherProfilesUpdated]
+        launchProfile:SetString[name,"Copy of ${SelectedLaunchProfile.Get[name]~}"]
+        Settings.Launcher.Get[profiles]:Add["${launchProfile~}"]
+        This:SetSelectedLaunchProfile["${launchProfile.Get[name]~}",FALSE]
+        LGUI2.Element[basicCore.events]:FireEventHandler[onLaunchProfilesUpdated]
         return TRUE
     }
 
@@ -153,21 +153,80 @@ objectdef basicCore
     {
         echo OnDeleteLaunchProfileButton
 
-        if !${SelectedLauncherProfile.Reference(exists)}
+        if !${SelectedLaunchProfile.Reference(exists)}
             return
 
-        Settings:EraseLauncherProfile[${SelectedLauncherProfile.Get[name]~}]
-        LGUI2.Element[basicCore.events]:FireEventHandler[onLauncherProfilesUpdated]
+        Settings:EraseLaunchProfile[${SelectedLaunchProfile.Get[name]~}]
+        LGUI2.Element[basicCore.events]:FireEventHandler[onLaunchProfilesUpdated]
+    }
+
+    method OnNewWindowLayoutButton()
+    {
+        echo OnNewWindowLayoutButton
+        variable uint id
+        id:Set[${Settings.FindWindowLayout["New Window Layout"]}]
+        if ${id}
+        {
+            This:SetEditingWindowLayout["New Window Layout"]
+            return
+        }
+
+        variable jsonvalue jo
+        jo:SetValue["$$>
+        {
+            "name":"New Window Layout",
+            "style":"horizontal"
+        }
+        <$$"]
+        Settings.WindowLayout.Get[layouts]:Add["${jo~}"]
+        This:SetEditingWindowLayout["New Window Layout"]
+        LGUI2.Element[basicCore.events]:FireEventHandler[onWindowLayoutsUpdated]
+        return TRUE
+    }
+
+    method OnCopyWindowLayoutButton()
+    {
+        echo OnCopyWindowLayoutButton
+
+        if !${EditingWindowLayout.Reference(exists)}
+            return
+
+        variable uint id
+        id:Set[${Settings.FindWindowLayout["${EditingWindowLayout.Get[name]~}"]}]
+        if !${id}
+        {
+            return
+        }
+        variable jsonvalue windowLayout
+
+        windowLayout:SetValue["${Settings.WindowLayout.Get[layouts,${id}]~}"]
+
+        windowLayout:SetString[name,"Copy of ${EditingWindowLayout.Get[name]~}"]
+        Settings.WindowLayout.Get[layouts]:Add["${windowLayout~}"]
+        This:SetEditingWindowLayout["${windowLayout.Get[name]~}"]
+        LGUI2.Element[basicCore.events]:FireEventHandler[onWindowLayoutsUpdated]
+        return TRUE
+    }
+
+    method OnDeleteWindowLayoutButton()
+    {
+         echo OnDeleteWindowLayoutButton
+
+        if !${EditingWindowLayout.Reference(exists)}
+            return
+
+        Settings:EraseWindowLayout[${EditingWindowLayout.Get[name]~}]
+        LGUI2.Element[basicCore.events]:FireEventHandler[onWindowLayoutsUpdated]
     }
 
     method OnLaunchButton()
     {
         echo OnLaunchButton
 
-        if !${SelectedLauncherProfile.Reference(exists)}
+        if !${SelectedLaunchProfile.Reference(exists)}
             return
 
-        Launcher:Launch[SelectedLauncherProfile]
+        Launcher:Launch[SelectedLaunchProfile]
     }
 
     method OnSaveAndApplyButton()
@@ -272,23 +331,23 @@ objectdef basicCore_launcher
         }
     }
 
-    method InstallCharacter(uint Slot, jsonvalueref launcherProfile)
+    method InstallCharacter(uint Slot, jsonvalueref launchProfile)
     {
-        if !${launcherProfile.Type.Equal[object]}
+        if !${launchProfile.Type.Equal[object]}
             return FALSE
 
         variable jsonvalue jo
-        jo:SetValue["${launcherProfile.AsJSON~}"]
+        jo:SetValue["${launchProfile.AsJSON~}"]
 
         jo:SetInteger[id,${Slot}]
 
-        if ${launcherProfile.Has[name]}
-            jo:SetString[display_name,"${launcherProfile.Get[name]~}"]
+        if ${launchProfile.Has[name]}
+            jo:SetString[display_name,"${launchProfile.Get[name]~}"]
 
-        if ${launcherProfile.Has[game]}
-            jo:SetString[gameProfile,"${launcherProfile.Get[game]~} Default Profile"]
+        if ${launchProfile.Has[game]}
+            jo:SetString[gameProfile,"${launchProfile.Get[game]~} Default Profile"]
 
-        if ${launcherProfile.GetBool[useDefaultVirtualFiles]}
+        if ${launchProfile.GetBool[useDefaultVirtualFiles]}
         {
             This:AddDefaultVirtualFiles[${Slot},jo]
         }
@@ -312,7 +371,7 @@ objectdef basicCore_launcher
         return 0
     }
 
-    method Launch(jsonvalueref launcherProfile, uint Slot=0)
+    method Launch(jsonvalueref launchProfile, uint Slot=0)
     {
         if !${Slot}
         {
@@ -325,7 +384,7 @@ objectdef basicCore_launcher
             kill jmb${Slot}
         }
 
-        This:InstallCharacter[${Slot},launcherProfile]
+        This:InstallCharacter[${Slot},launchProfile]
         JMB.Slot[${Slot}]:SetCharacter[${Slot}]
         JMB.Slot[${Slot}]:Launch
     }

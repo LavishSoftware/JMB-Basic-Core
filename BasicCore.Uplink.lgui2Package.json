@@ -291,7 +291,7 @@
                                                     "pullHook": {   
                                                         "elementName": "basicCore.events",
                                                         "flags": "global",
-                                                        "event": "onLauncherProfilesUpdated"
+                                                        "event": "onLaunchProfilesUpdated"
                                                     }
                                                 },
                                                 "itemViewGenerators":{
@@ -301,8 +301,8 @@
                                                     }
                                                 },
                                                 "selectedItemBinding":{
-                                                    "pullFormat":"${BasicCore.SelectedLauncherProfile.Get[name]}",
-                                                    "pushFormat":["BasicCore:SetSelectedLauncherProfile[\"","\"]"]
+                                                    "pullFormat":"${BasicCore.SelectedLaunchProfile.Get[name]}",
+                                                    "pushFormat":["BasicCore:SetSelectedLaunchProfile[\"","\"]"]
                                                 },
                                                 "selectedItemBindingProperty":"name"
                                             }
@@ -388,7 +388,7 @@
                                                         "pullHook": {   
                                                             "elementName": "basicCore.events",
                                                             "flags": "global",
-                                                            "event": "onLauncherProfilesUpdated"
+                                                            "event": "onLaunchProfilesUpdated"
                                                         }
                                                     },
                                                     "itemViewGenerators":{
@@ -398,8 +398,8 @@
                                                         }
                                                     },
                                                     "selectedItemBinding":{
-                                                        "pullFormat":"${BasicCore.SelectedLauncherProfile.Get[name]}",
-                                                        "pushFormat":["BasicCore:SetSelectedLauncherProfile[\"","\"]"]
+                                                        "pullFormat":"${BasicCore.SelectedLaunchProfile.Get[name]}",
+                                                        "pushFormat":["BasicCore:SetSelectedLaunchProfile[\"","\"]"]
                                                     },
                                                     "selectedItemBindingProperty":"name"
                                                 }
@@ -409,7 +409,7 @@
                                             "type":"objectview",
                                             "_dock":"top",
                                             "objectBinding": {
-                                                "pullFormat":"${BasicCore.SelectedLauncherProfile}"
+                                                "pullFormat":"${BasicCore.SelectedLaunchProfile}"
                                             },
                                             "properties":[
                                                 {
