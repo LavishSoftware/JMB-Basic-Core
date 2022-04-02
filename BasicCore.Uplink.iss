@@ -226,6 +226,7 @@ objectdef basicCore
         if !${SelectedLaunchProfile.Reference(exists)}
             return
 
+        Settings:StoreFile
         Launcher:Launch[SelectedLaunchProfile]
     }
 
