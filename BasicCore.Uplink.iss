@@ -47,6 +47,11 @@ objectdef basicCore
 
         EditingWindowLayout:SetReference["Settings.WindowLayout.Get[layouts,${id}]"]
 
+        if !${EditingWindowLayout.Has[mainRegion]}
+            EditingWindowLayout:Set[mainRegion,"{}"]
+        if !${EditingWindowLayout.Has[regions]}
+            EditingWindowLayout:Set[regions,"[]"]
+
         LGUI2.Element[basicCore.events]:FireEventHandler[onEditingWindowLayoutUpdated]
     }
 

@@ -129,9 +129,9 @@
                     "type":"textbox",
                     "minSize":[60,0],
                     "textBinding":{
-                        "pullFormat":"${_CONTEXTITEMDATA_.Get[x]}",
-                        "pullReplaceNull":"",
-                        "pushFormat":["_CONTEXTITEMDATA_:SetInteger[x,","]"]
+                        "pullFormat":"${This.Context.GetInteger[x]}",
+                        "pullReplaceNull":"0",
+                        "pushFormat":["This.Context:SetInteger[x,","]"]
                     },
                     "textBindingUsesFocus":true
                 },
@@ -143,9 +143,9 @@
                     "type":"textbox",
                     "minSize":[60,0],
                     "textBinding":{
-                        "pullFormat":"${_CONTEXTITEMDATA_.Get[y]}",
-                        "pullReplaceNull":"",
-                        "pushFormat":["_CONTEXTITEMDATA_:SetInteger[y,","]"]
+                        "pullFormat":"${This.Context.GetInteger[y]}",
+                        "pullReplaceNull":"0",
+                        "pushFormat":["This.Context:SetInteger[y,","]"]
                     },
                     "textBindingUsesFocus":true
                 },
@@ -157,9 +157,9 @@
                     "type":"textbox",
                     "minSize":[60,0],
                     "textBinding":{
-                        "pullFormat":"${_CONTEXTITEMDATA_.Get[width]}",
-                        "pullReplaceNull":"",
-                        "pushFormat":["_CONTEXTITEMDATA_:SetInteger[width,","]"]
+                        "pullFormat":"${This.Context.GetInteger[width]}",
+                        "pullReplaceNull":"0",
+                        "pushFormat":["This.Context:SetInteger[width,","]"]
                     },
                     "textBindingUsesFocus":true
                 },
@@ -171,9 +171,9 @@
                     "type":"textbox",
                     "minSize":[60,0],
                     "textBinding":{
-                        "pullFormat":"${_CONTEXTITEMDATA_.Get[height]}",
-                        "pullReplaceNull":"",
-                        "pushFormat":["_CONTEXTITEMDATA_:SetInteger[height,","]"]
+                        "pullFormat":"${This.Context.GetInteger[height]}",
+                        "pullReplaceNull":"0",
+                        "pushFormat":["This.Context:SetInteger[height,","]"]
                     },
                     "textBindingUsesFocus":true
                 }
@@ -752,6 +752,13 @@
                                                     "selectedItemBindingProperty":"name"
                                                 }
                                             ]
+                                        },
+                                        {
+                                            "jsonTemplate":"basicCore.windowLayoutRegionEdit",
+                                            "_dock":"bottom",
+                                            "contextBinding":{
+                                                "pullFormat":"${BasicCore.EditingWindowLayout.Get[mainRegion]}"
+                                            }
                                         },
                                         {
                                             "type":"objectview",
