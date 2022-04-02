@@ -147,6 +147,25 @@ objectdef basicCore
         relay all "JMB.Agent[\"Basic Core\"]:Stop:Start"
     }
 
+    method OnAddSlotActivationHotkeyButton()
+    {
+        echo OnAddSlotActivationHotkeyButton
+
+        Settings.Hotkeys.Get[slotHotkeys]:Add["\"NONE\""]
+        LGUI2.Element[basicCore.events]:FireEventHandler[onSlotActivationHotkeysUpdated]
+    }
+
+    method OnRemoveSlotActivationHotkeyButton()
+    {
+        echo OnRemoveSlotActivationHotkeyButton
+        variable uint idx = ${LGUI2.Element[basicCore.slotActivateHotkeysList].SelectedItem.Index}
+        if !${idx}
+            return
+
+        Settings.Hotkeys.Get[slotHotkeys]:Erase[${idx}]
+        LGUI2.Element[basicCore.events]:FireEventHandler[onSlotActivationHotkeysUpdated]
+    }
+
 }
 
 objectdef basicCore_launcher

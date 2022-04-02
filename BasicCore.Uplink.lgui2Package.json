@@ -97,16 +97,21 @@
                 "children":[
                     {
                         "type":"textblock",
+                        "minSize":[80,0],
                         "textBinding":{
                         "pullFormat":"Slot ${_CONTEXTITEM_.Index}: ",
                         "pullReplaceNull":""
                         }
                     },
                     {
-                        "type":"textblock",
-                        "textBinding":{
-                        "pullFormat":"${_CONTEXTITEMDATA_}",
-                        "pullReplaceNull":""
+                        "type":"inputpicker",
+                        "multipleControlMode": false,
+                        "comboMode": true,
+                        "minSize":[200,0],
+                        "valueBinding":{
+                            "pullFormat":"${BasicCore.Settings.Hotkeys.Get[slotHotkeys,${_CONTEXTITEM_.Index}]}",
+                            "pullReplaceNull":"",
+                            "pushFormat":["BasicCore.Settings.Hotkeys.Get[slotHotkeys]:SetString[${_CONTEXTITEM_.Index},\"","\"]"]
                         }
                     }
                 ]
@@ -616,11 +621,25 @@
                                             "children":[
                                                 {
                                                     "type":"button",
-                                                    "content":"Add"
+                                                    "content":"Add",
+                                                    "eventHandlers":{
+                                                        "onPress":{
+                                                            "type":"method",
+                                                            "object":"BasicCore",
+                                                            "method":"OnAddSlotActivationHotkeyButton"
+                                                        }
+                                                    }
                                                 },
                                                 {
                                                     "type":"button",
-                                                    "content":"Remove"
+                                                    "content":"Remove",
+                                                    "eventHandlers":{
+                                                        "onPress":{
+                                                            "type":"method",
+                                                            "object":"BasicCore",
+                                                            "method":"OnRemoveSlotActivationHotkeyButton"
+                                                        }
+                                                    }
                                                 }
                                             ]
                                         },
@@ -629,8 +648,14 @@
                                             "_dock":"top",
                                             "horizontalAlignment":"stretch",
                                             "verticalAlignment":"stretch",
+                                            "name":"basicCore.slotActivateHotkeysList",
                                             "itemsBinding":{
-                                                "pullFormat":"${BasicCore.Settings.Hotkeys.Get[slotHotkeys]}"
+                                                "pullFormat":"${BasicCore.Settings.Hotkeys.Get[slotHotkeys]}",
+                                                "pullHook": {   
+                                                    "elementName": "basicCore.events",
+                                                    "flags": "global",
+                                                    "event": "onSlotActivationHotkeysUpdated"
+                                                }
                                             },
                                             "itemViewGenerators":{
                                                 "default":{
