@@ -261,6 +261,25 @@ objectdef basicCore
         LGUI2.Element[basicCore.events]:FireEventHandler[onSlotActivationHotkeysUpdated]
     }
 
+    method OnAddWindowLayoutRegionButton()
+    {
+        echo OnAddWindowLayoutRegionButton
+        BasicCore.EditingWindowLayout.Get[regions]:Add["{}"]
+        LGUI2.Element[basicCore.events]:FireEventHandler[onEditingWindowLayoutUpdated]
+    }  
+
+    method OnRemoveWindowLayoutRegionButton()
+    {
+        variable uint idx=${LGUI2.Element[basicCore.windowLayoutRegionsList].SelectedItem.Index}
+        echo OnRemoveWindowLayoutRegionButton ${idx}
+
+        if ${idx}
+            BasicCore.EditingWindowLayout.Get[regions]:Erase[${idx}]
+        LGUI2.Element[basicCore.events]:FireEventHandler[onEditingWindowLayoutUpdated]
+        
+;        echo ${LGUI2.Element[basicCore.windowLayoutRegionsList].SelectedItem.Index}
+    }
+
 }
 
 objectdef basicCore_launcher

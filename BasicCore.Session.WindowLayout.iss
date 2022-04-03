@@ -168,6 +168,8 @@ objectdef basicCore_windowLayout
 
         switch ${CurrentLayout.Get[style]}
         {
+            case none
+                break
             case horizontal
                 This:ApplyHorizontalLayout[${setOtherSlots}]
                 break

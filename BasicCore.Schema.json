@@ -56,7 +56,7 @@
                 },
                 "style":{
                     "type":"string",
-                    "enum": ["horizontal","veritcal","custom"]
+                    "enum": ["none","horizontal","veritcal","custom"]
                 },
                 "mainRegion":{
                     "allOf": [

@@ -183,7 +183,20 @@
             "jsonTemplate":"listboxitem",
             "padding":2,
             "content":{
-                "jsonTemplate":"basicCore.windowLayoutRegionEdit"
+                "type":"stackpanel",
+                "orientation":"horizontal",
+                "children":[
+                    {
+                        "type":"textblock",
+                        "text":"Region ${This.Context.Index}: "
+                    },
+                    {
+                        "jsonTemplate":"basicCore.windowLayoutRegionEdit",
+                        "contextBinding":{
+                            "pullFormat":"${BasicCore.EditingWindowLayout.Get[regions,${_CONTEXTITEM_.Index}]}"
+                        }
+                    }
+                ]
             }
         },
         "basicCore.windowLayoutStyles":{
@@ -754,12 +767,107 @@
                                             ]
                                         },
                                         {
-                                            "jsonTemplate":"basicCore.windowLayoutRegionEdit",
+                                            "type":"dockpanel",
+                                            "name":"basicCore.windowLayoutCustomRegions",
+                                            "visibility":"collapsed",
                                             "_dock":"bottom",
-                                            "contextBinding":{
-                                                "pullFormat":"${BasicCore.EditingWindowLayout.Get[mainRegion]}"
-                                            }
-                                        },
+                                            "horizontalAlignment":"stretch",
+                                            "styles":{
+                                                "on":{
+                                                    "visibility":"visible"
+                                                },
+                                                "off":{
+                                                    "visibility":"collapsed"
+                                                }
+                                            },
+                                            "triggers":{
+                                                "state":{
+                                                    "condition": "${BasicCore.EditingWindowLayout.Get[style]~.Equal[custom]}",
+                                                    "matched": {
+                                                      "type": "style",
+                                                      "styleName": "on"
+                                                    },
+                                                    "unmatched": {
+                                                      "type": "style",
+                                                      "styleName": "off"
+                                                    }
+                                                }
+                                            },
+                                            "children":[
+                                                {
+                                                    "type":"stackpanel",
+                                                    "_dock":"bottom",
+                                                    "orientation":"horizontal",
+                                                    "children":[
+                                                        {
+                                                            "type":"button",
+                                                            "content":"Add",
+                                                            "eventHandlers":{
+                                                                "onPress":{
+                                                                    "type":"method",
+                                                                    "object":"BasicCore",
+                                                                    "method":"OnAddWindowLayoutRegionButton"
+                                                                }
+                                                            }
+                                                        },
+                                                        {
+                                                            "type":"button",
+                                                            "content":"Remove",
+                                                            "eventHandlers":{
+                                                                "onPress":{
+                                                                    "type":"method",
+                                                                    "object":"BasicCore",
+                                                                    "method":"OnRemoveWindowLayoutRegionButton"
+                                                                }
+                                                            }
+                                                        }
+                                                    ]
+                                                },
+                                                {
+                                                    "type":"listbox",
+                                                    "_dock":"bottom",
+                                                    "horizontalAlignment":"stretch",
+                                                    "minSize":[0,30],
+                                                    "name":"basicCore.windowLayoutRegionsList",
+                                                    "itemsBinding":{
+                                                        "pullFormat":"${BasicCore.EditingWindowLayout.Get[regions]}",
+                                                        "pullHook": {   
+                                                            "elementName": "basicCore.events",
+                                                            "flags": "global",
+                                                            "event": "onEditingWindowLayoutUpdated"
+                                                        }
+                                                    },
+                                                    "itemViewGenerators":{
+                                                        "default":{
+                                                            "type":"template",
+                                                            "template":"basicCore.windowLayoutRegionView"
+                                                        }
+                                                    }
+                                                },
+                                                {
+                                                    "type":"textblock",
+                                                    "_dock":"bottom",
+                                                    "text":"Additional Regions"
+                                                },
+                                                {
+                                                    "type":"stackpanel",
+                                                    "_dock":"bottom",
+                                                    "orientation":"horizontal",
+                                                    "children":[
+                                                        {
+                                                            "type":"textblock",
+                                                            "text":"Main Region: "
+                                                        },
+                                                        {
+                                                            "jsonTemplate":"basicCore.windowLayoutRegionEdit",
+                                                            "contextBinding":{
+                                                                "pullFormat":"${BasicCore.EditingWindowLayout.Get[mainRegion]}"
+                                                            }
+                                                        }
+                                                    ]
+                                                }      
+                                            ]
+                                        },                                        
                                         {
                                             "type":"objectview",
                                             "_dock":"top",
