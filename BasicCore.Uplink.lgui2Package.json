@@ -1,6 +1,16 @@
 {
     "$schema": "http://www.lavishsoft.com/schema/lgui2Package.json",
     "templates":{
+        "basicCore.agentProvider":{
+            "name": "BasicCore",
+            "platform": "joemultiboxer",
+            "listings": {                
+                "BasicCore": {
+                    "name": "Basic Core",
+                    "url":"https://github.com/LavishSoftware/JMB-Basic-Core/archive/refs/heads/master.zip"
+                }
+            }
+        },
         "basicCore.defaultSettings":{
             "launcher":{
             },
@@ -222,7 +232,7 @@
         {
             "type":"window",
             "name":"basicCore.mainWindow",
-            "title":"Joe Multiboxer: Basic Core",
+            "title":"Joe Multiboxer: Basic Core ${JMB.Agent[Basic Core].Version}",
             "hideOnClose": true,
             "horizontalAlignment": "center",
             "verticalAlignment": "center",
@@ -267,6 +277,58 @@
                                     "onPress":{
                                         "type":"code",
                                         "code":"JMB.Agent[Basic Core]:Stop:Reload:Start"
+                                    }
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "_dock":"top",
+                        "type":"dockpanel",
+                        "visibility":"collapsed",
+                        "name":"basicCore.versionCheckPanel",
+                        "horizontalAlignment":"center",
+                        "padding":8,
+                        "children":[
+                            {
+                                "type":"stackpanel",
+                                "_dock":"top",
+                                "orientation":"horizontal",
+                                "children":[
+                                    {
+                                        "type":"textblock",
+                                        "text":"Latest Version: "
+                                    },
+                                    {
+                                        "type":"textblock",
+                                        "textBinding":{
+                                            "pullFormat":"${BasicCore.LatestVersion.Get[version]}",
+                                            "pullReplaceNull":"checking..."
+                                        }
+                                    },
+                                    {
+                                        "type":"textblock",
+                                        "text":" Minimum JMB build required: "
+                                    },
+                                    {
+                                        "type":"textblock",
+                                        "textBinding":{
+                                            "pullFormat":"${BasicCore.LatestVersion.Get[minimumBuild]}",
+                                            "pullReplaceNull":"checking..."
+                                        }
+                                    }
+                                ]
+                            },
+                            {
+                                "type":"button",
+                                "_dock":"top",
+                                "horizontalAlignment":"center",
+                                "content":"Install Latest Basic Core!",
+                                "eventHandlers":{
+                                    "onPress":{
+                                        "type":"method",
+                                        "object":"BasicCore",
+                                        "method":"OnInstallLatestButton"
                                     }
                                 }
                             }

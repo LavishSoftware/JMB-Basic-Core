@@ -2,12 +2,16 @@
 
 objectdef basicCore
 {
+    variable taskmanager TaskManager=${LMAC.NewTaskManager["basicCore"]}
+
     variable basicCore_settings Settings
     variable basicCore_launcher Launcher
 
     variable weakref SelectedLaunchProfile
 
     variable weakref EditingWindowLayout
+
+    variable jsonvalueref LatestVersion
 
     method Initialize()
     {
@@ -27,16 +31,22 @@ objectdef basicCore
 
         if ${Settings.Launcher.Has[lastSelectedProfile]}
             This:SetSelectedLaunchProfile["${Settings.Launcher.Get[lastSelectedProfile]~}",0]
+
+        This:AddAgentProvider
+        This:VersionCheck
     }
 
     method Shutdown()
     {
+        TaskManager:Destroy
+
+        This:RemoveAgentProvider
         LGUI2:UnloadPackageFile[BasicCore.Uplink.lgui2Package.json]
     }
 
     method SetEditingWindowLayout(string name)
     {
-        echo SetEditingWindowLayout ${name~}
+;        echo SetEditingWindowLayout ${name~}
         variable uint id
         id:Set[${Settings.FindWindowLayout["${name~}"]}]
         if !${id}
@@ -57,7 +67,7 @@ objectdef basicCore
 
     method SetSelectedLaunchProfile(string name, bool storeSettings=TRUE)
     {
-        echo SetSelectedLaunchProfile ${name~}
+;        echo SetSelectedLaunchProfile ${name~}
         variable uint id
         id:Set[${Settings.FindLaunchProfile["${name~}"]}]
         if !${id}
@@ -280,6 +290,77 @@ objectdef basicCore
 ;        echo ${LGUI2.Element[basicCore.windowLayoutRegionsList].SelectedItem.Index}
     }
 
+    method OnInstallLatestButton()
+    {
+        variable string command1="timed 1 "relay all -noredirect \"JMB.Agent[Basic Core]:Stop:Reload:Start\"""
+        variable string command2="timed 1 \"JMB.Agent[Basic Core]:Stop:Reload:Start\""
+
+        variable jsonvalue joTask
+        joTask:SetValue["$$>
+        {
+            "type":"chain",
+            "tasks":[
+                {
+                    "type":"agent.install",
+                    "provider":"BasicCore",
+                    "listing":"BasicCore",
+                    "download":true
+                },
+                {
+                    "type":"ls1.code",
+                    "instant":true,
+                    "start":${command1.AsJSON~},
+                    "stop":${command2.AsJSON~}
+                }
+            ]
+        }        
+        <$$"]
+
+        TaskManager:BeginTask["${joTask.AsJSON~}"]
+    }
+
+    method AddAgentProvider()
+    {
+        JMB:AddAgentProvider["","${LGUI2.Template[basicCore.agentProvider]~}"]        
+    }
+
+    method RemoveAgentProvider()
+    {
+        JMB.AgentProvider[BasicCore]:Remove
+    }
+
+    method VersionCheck()
+    {
+        ; 
+        ; LatestVersion
+        variable jsonvalue joTask
+        joTask:SetValue["$$>
+            {
+                "type":"webrequest",
+                "as":"json",
+                "object":"BasicCore",
+                "method":"OnVersionCheckComplete",
+                "url":"https://raw.githubusercontent.com/LavishSoftware/JMB-Basic-Core/master/agent.json"
+            }
+            <$$"]
+
+;        echo "starting task ${joTask.AsJSON~}"
+        TaskManager:BeginTask["${joTask.AsJSON~}"]
+    }
+
+    method OnVersionCheckComplete()
+    {
+        echo OnVersionCheckComplete ${Context(type)} state=${Context.State} result=${Context.Result}
+
+        LatestVersion:SetReference["Context.Result.Get[jsonResult]"]
+
+        if ${LatestVersion.Get[version].NotEqual["${JMB.Agent[Basic Core].Version~}"]}
+        {
+            LGUI2.Element[basicCore.versionCheckPanel]:SetVisibility[Visible]
+        }
+
+        LGUI2.Element[basicCore.events]:FireEventHandler[onLatestVersionUpdated]
+    }
 }
 
 objectdef basicCore_launcher

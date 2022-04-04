@@ -1,7 +1,7 @@
 {
     "$schema": "http://www.lavishsoft.com/schema/agent.json",
     "name": "Basic Core",
-    "version": "20220403.1",
+    "version": "20220404.1",
     "minimumBuild": 6920,
     "platforms": {
         "joe multiboxer uplink": {
