@@ -431,7 +431,7 @@ objectdef basicCore_launcher
                 This:AddVirtualFile[jo,"*/eqlsPlayerData.ini","{1}/eqlsPlayerData.Generic.JMB${Slot}.ini"]
                 break
             case World of Warcraft
-                This:AddVirtualFile[jo,"*\/Config.WTF","{1}/Condif.Generic.JMB${Slot}.ini"]
+                This:AddVirtualFile[jo,"*\/Config.WTF","{1}/Config.Generic.JMB${Slot}.WTF"]
                 This:AddVirtualFile[jo,"Software/Blizzard Entertainment/World of Warcraft/Client/\*","Software/Blizzard Entertainment/World of Warcraft/Client-JMB${Slot}/{1}"]
                 break
         }
