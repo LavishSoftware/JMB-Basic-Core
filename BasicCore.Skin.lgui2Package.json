@@ -1,0 +1,132 @@
+{
+    "$schema": "http://www.lavishsoft.com/schema/lgui2Package.json",
+    "skin": {
+        "name": "basicCore",
+        "brushes": {
+            "basicCore.background1": {
+                "jsonTemplate": "basicCore.background1"
+            },
+            "basicCore.background1dark": {
+                "jsonTemplate": "basicCore.background1dark"
+            },
+            "basicCore.background1darker": {
+                "jsonTemplate": "basicCore.background1darker"
+            },
+            "basicCore.highlight1": {
+                "jsonTemplate": "basicCore.highlight1"
+            },
+            "window.titleBar.backgroundBrush": {
+                "jsonTemplate": "basicCore.background1"
+            }
+        },
+        "templates": {
+            "basicCore.background1": {
+                "color": [
+                    0.15,
+                    0.35,
+                    0.25
+                ]
+            },
+            "basicCore.background1dark": {
+                "color": [
+                    0.1,
+                    0.3,
+                    0.2
+                ]
+            },
+            "basicCore.background1darker": {
+                "color": [
+                    0.0,
+                    0.2,
+                    0.1
+                ]
+            },
+            "basicCore.highlight1": {
+                "color": [
+                    0.8,
+                    0.8,
+                    0.3
+                ]
+            },
+            "window.closeButton": {
+                "jsonTemplate": "default:window.closeButton",
+                "borderThickness": [
+                    1,
+                    1,
+                    0,
+                    0
+                ],
+                "margin": [
+                    0,
+                    0,
+                    0,
+                    2
+                ]
+            },
+            "window.shadeButton": {
+                "jsonTemplate": "default:window.shadeButton",
+                "borderThickness": [
+                    1,
+                    1,
+                    0,
+                    0
+                ],
+                "margin": [
+                    0,
+                    0,
+                    2,
+                    2
+                ]
+            },
+            "tab.headerContainer": {
+                "jsonTemplate": "default:tab.headerContainer",
+                "backgroundBrush": "basicCore.background1darker",
+                "borderBrush": "basicCore.background1dark",
+                "font": {
+                    "face": "Segoe UI",
+                    "heightFactor": 1.4
+                },
+                "styles": {
+                    "onSelected": {
+                        "font": {
+                            "bold": true
+                        },
+                        "color": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ],
+                        "backgroundBrush": "basicCore.background1darker",
+                        "borderBrush": "basicCore.highlight1",
+                        "borderThickness": 2
+                    },
+                    "onDeselected": {
+                        "font": {
+                            "bold": false
+                        },
+                        "color": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ],
+                        "backgroundBrush": "basicCore.background1darker",
+                        "borderBrush": "basicCore.background1dark",
+                        "borderThickness": 1
+                    }
+                }
+            },
+            "tabcontrol.contentContainer": {
+                "jsonTemplate": "default:tabcontrol.contentContainer",
+                "backgroundBrush": "basicCore.background1dark",
+                "borderThickness": 0
+            },
+            "window": {
+                "jsonTemplate": "default:window",
+                "font": {
+                    "face": "Segoe UI",
+                    "height": 14
+                }
+            }
+        }
+    }
+}

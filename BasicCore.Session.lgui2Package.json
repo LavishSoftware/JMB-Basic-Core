@@ -1,5 +1,9 @@
 {
     "$schema": "http://www.lavishsoft.com/schema/lgui2Package.json",
+    "includes":[
+        "BasicCore.Skin.lgui2Package.json"
+    ],
+    "skin":"basicCore",
     "templates":{
 
     },
