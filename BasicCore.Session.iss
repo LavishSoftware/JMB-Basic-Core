@@ -11,12 +11,23 @@ objectdef basicCore
     variable basicCore_windowLayout WindowLayout
     variable basicCore_windowSwitching WindowSwitching
 
+    variable bool ValidSession
+
     method Initialize()
     {
+        if !${JMB.Slot.Metadata.Get[launcher]~.Equal["Basic Core"]}
+        {
+            echo "Basic Core inactive; Session not launched by Basic Core."
+            return
+        }
+
+        ValidSession:Set[1]
+
         LGUI2:LoadPackageFile[BasicCore.Session.lgui2Package.json]
         This:LoadSettings
 
         Highlighter:Enable
+        WindowSwitching:LateInitialize
         This:ApplySettings
     }
 
@@ -25,7 +36,34 @@ objectdef basicCore
         TaskManager:Destroy
 
         LGUI2:UnloadPackageFile[BasicCore.Session.lgui2Package.json]
-    }    
+    }
+
+    method Unicast(string relay_target, string command)
+    {
+        variable string wrappedCommand
+        wrappedCommand:Set["BasicCore:OnReceiveCommand[\"${Session~}\",\"${command~}\"]"]
+        echo BeginTask=${TaskManager:BeginTask["$$>
+        {
+            "type":"unicast",
+            "target":${relay_target.AsJSON~},
+            "task":{
+                "type":"ls1.code",
+                "start":${wrappedCommand.AsJSON~}
+            }
+        }
+        <$$"](exists)}
+    }
+
+    method OnReceiveCommand(string relay_from, string command)
+    {
+        echo "OnReceiveCommand(\"${relay_from~}\",\"${command~}\")"
+        execute -reparse "${command~}"
+    }
+
+    method Restart()
+    {
+        timed 0 "JMB.Agent[Basic Core]:Stop:Reload:Start"
+    }
 
     method LoadSettings()
     {
@@ -149,7 +187,7 @@ objectdef basicCore_windowSwitching
     variable bool HotkeyInstalled
     variable uint NumSlotHotkeys
 
-    method Initialize()
+    method LateInitialize()
     {
         LavishScript:RegisterEvent[On3DReset]
         LavishScript:RegisterEvent[OnHotkeyFocused]
@@ -336,6 +374,8 @@ variable(global) basicCore BasicCore
 
 function main()
 {
+    if !${BasicCore.ValidSession}
+        return
     while 1
         waitframe
 }

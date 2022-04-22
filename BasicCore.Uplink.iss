@@ -249,7 +249,7 @@ objectdef basicCore
     {
         Settings:StoreFile
         ; restart agent in sessions
-        relay all "JMB.Agent[\"Basic Core\"]:Stop:Start"
+        relay all "BasicCore:Restart"
     }
 
     method OnAddSlotActivationHotkeyButton()
@@ -492,6 +492,7 @@ objectdef basicCore_launcher
 
         This:InstallCharacter[${Slot},launchProfile]
         JMB.Slot[${Slot}]:SetCharacter[${Slot}]
+        JMB.Slot[${Slot}].Metadata[TRUE]:SetString["launcher","Basic Core"]
         JMB.Slot[${Slot}]:Launch
     }
 

@@ -252,7 +252,7 @@ objectdef basicCore_windowLayout
             slotID:Set["${Slots[${numSlot}].Get[id]~}"]
             if ${slotID}!=${JMB.Slot}
             {
-                relay jmb${slotID} "WindowCharacteristics ${stealthFlag}-pos -viewable ${useX},${mainHeight} -size -viewable ${smallWidth}x${smallHeight} -frame none"
+                BasicCore:Unicast["jmb${slotID}","WindowCharacteristics ${stealthFlag}-pos -viewable ${useX},${mainHeight} -size -viewable ${smallWidth}x${smallHeight} -frame none"]
                 useX:Inc["${smallWidth}"]
             }
             else
@@ -329,7 +329,7 @@ objectdef basicCore_windowLayout
             slotID:Set["${Slots[${numSlot}].Get[id]~}"]
             if ${slotID}!=${JMB.Slot}
             {
-                relay jmb${slotID} "WindowCharacteristics ${stealthFlag}-pos -viewable ${mainWidth},${useY} -size -viewable ${smallWidth}x${smallHeight} -frame none"
+                BasicCore:Unicast["jmb${slotID}","WindowCharacteristics ${stealthFlag}-pos -viewable ${mainWidth},${useY} -size -viewable ${smallWidth}x${smallHeight} -frame none"]
                 useY:Inc["${smallHeight}"]
             }
             else
@@ -389,9 +389,9 @@ objectdef basicCore_windowLayout
                 if ${smallWidth} && ${smallHeight}
                 {
                     if ${smallWidth}==${mainWidth} && ${smallHeight}==${mainHeight}
-                        relay jmb${slotID} "WindowCharacteristics -pos -viewable ${smallX},${smallY} -size -viewable ${smallWidth}x${smallHeight} -frame none"
+                        BasicCore:Unicast["jmb${slotID}","WindowCharacteristics -pos -viewable ${smallX},${smallY} -size -viewable ${smallWidth}x${smallHeight} -frame none"]
                     else
-                        relay jmb${slotID} "WindowCharacteristics ${stealthFlag}-pos -viewable ${smallX},${smallY} -size -viewable ${smallWidth}x${smallHeight} -frame none"
+                        BasicCore:Unicast["jmb${slotID}","WindowCharacteristics ${stealthFlag}-pos -viewable ${smallX},${smallY} -size -viewable ${smallWidth}x${smallHeight} -frame none"]
                 }
 
                 numSmallRegion:Inc
