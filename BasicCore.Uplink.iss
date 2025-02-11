@@ -134,6 +134,8 @@ objectdef basicCore
             "name":"New Launch Profile"
         }
         <$$"]
+        if !${Settings.Launcher.Has[profiles]} || !${Settings.Launcher.Get[profiles].Type.Equal[array]}
+            Settings.Launcher:Set[profiles,"[]"]
         Settings.Launcher.Get[profiles]:Add["${jo~}"]
         This:SetSelectedLaunchProfile["New Launch Profile",FALSE]
         LGUI2.Element[basicCore.events]:FireEventHandler[onLaunchProfilesUpdated]
